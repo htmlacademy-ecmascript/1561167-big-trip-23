@@ -1,3 +1,4 @@
+import TripModel from './model/trip-model';
 import BoardPresenter from './presenter/board-presenter';
 import { render } from './render';
 import FilterView from './view/filter-view';
@@ -12,8 +13,10 @@ const boardContainerElement = siteMainElement.querySelector(
   '.page-body__container'
 );
 
+const tripModel = new TripModel();
 const boardPresenter = new BoardPresenter({
   boardContainer: boardContainerElement,
+  tripModel,
 });
 
 render(new FilterView(), controlsFiltersElement);
