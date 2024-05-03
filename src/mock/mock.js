@@ -1,5 +1,6 @@
 const mockPoints = [
   {
+    // 0
     id: '0f458b5c-db98-49d4-a87b-0df701a7477c',
     basePrice: 6962,
     dateFrom: '2024-03-12T20:38:06.340Z',
@@ -10,6 +11,7 @@ const mockPoints = [
     type: 'restaurant',
   },
   {
+    // 1
     id: '133559ce-bc6f-4a9f-8342-e6e5378bbcf2',
     basePrice: 254,
     dateFrom: '2024-03-15T07:57:06.340Z',
@@ -20,6 +22,7 @@ const mockPoints = [
     type: 'train',
   },
   {
+    // 2
     id: '1ad4b34c-3ea8-4498-93d4-658beb228e4f',
     basePrice: 9713,
     dateFrom: '2024-03-18T04:53:06.340Z',
@@ -30,6 +33,7 @@ const mockPoints = [
     type: 'restaurant',
   },
   {
+    // 3
     id: '79208705-532c-4c58-b063-bd7af94b6d4a',
     basePrice: 219,
     dateFrom: '2024-03-18T21:14:06.340Z',
@@ -44,6 +48,7 @@ const mockPoints = [
     type: 'bus',
   },
   {
+    // 4
     id: 'a6f9a301-263b-46aa-9bce-1d71d571d00a',
     basePrice: 6122,
     dateFrom: '2024-03-19T11:41:06.340Z',
@@ -54,6 +59,7 @@ const mockPoints = [
     type: 'check-in',
   },
   {
+    // 5
     id: '54e2d697-f51a-4fc8-bc09-51fea666a726',
     basePrice: 9608,
     dateFrom: '2024-03-21T17:15:06.340Z',
@@ -64,6 +70,7 @@ const mockPoints = [
     type: 'sightseeing',
   },
   {
+    // 6
     id: '007ac159-0f5f-47d7-a1c1-e660f7c43c26',
     basePrice: 8737,
     dateFrom: '2024-03-24T02:55:06.340Z',
@@ -74,6 +81,7 @@ const mockPoints = [
     type: 'sightseeing',
   },
   {
+    // 7
     id: '2edcfeec-b60d-4a88-9356-54ec1322ae7a',
     basePrice: 4897,
     dateFrom: '2024-03-25T17:15:06.340Z',
@@ -84,6 +92,7 @@ const mockPoints = [
     type: 'train',
   },
   {
+    // 8
     id: '65932dd0-1c0f-400f-8f63-4b492bc8efb2',
     basePrice: 1622,
     dateFrom: '2024-03-28T16:54:06.340Z',
@@ -94,6 +103,7 @@ const mockPoints = [
     type: 'sightseeing',
   },
   {
+    // 9
     id: '992bc31c-0137-43f8-9bed-4b4dafac66f5',
     basePrice: 617,
     dateFrom: '2024-03-31T10:38:06.340Z',
@@ -104,6 +114,7 @@ const mockPoints = [
     type: 'drive',
   },
   {
+    // 10
     id: '1cde59dd-4418-4974-a323-b62044ea36d6',
     basePrice: 612,
     dateFrom: '2024-04-03T01:06:06.340Z',
@@ -117,6 +128,7 @@ const mockPoints = [
     type: 'restaurant',
   },
   {
+    // 11
     id: '04223ddd-8425-49b0-bcea-b1adb0b0c501',
     basePrice: 9015,
     dateFrom: '2024-04-05T22:17:06.340Z',
@@ -133,6 +145,7 @@ const mockPoints = [
     type: 'check-in',
   },
   {
+    // 12
     id: '0ed25479-c3f0-48dc-b955-ce96e720c3fd',
     basePrice: 2226,
     dateFrom: '2024-04-09T18:40:06.340Z',
@@ -146,6 +159,7 @@ const mockPoints = [
     type: 'train',
   },
   {
+    // 13
     id: '088d8969-2981-49fe-91e4-951373026b02',
     basePrice: 1544,
     dateFrom: '2024-04-11T23:14:06.340Z',
@@ -156,6 +170,7 @@ const mockPoints = [
     type: 'drive',
   },
   {
+    // 14
     id: '8d3ffb10-dbe6-433e-87ac-2e956a012fa1',
     basePrice: 853,
     dateFrom: '2024-04-14T09:18:06.340Z',
@@ -166,6 +181,7 @@ const mockPoints = [
     type: 'drive',
   },
   {
+    // 15
     id: '43673357-e56f-4f12-907b-dd2a8cb94e42',
     basePrice: 4637,
     dateFrom: '2024-04-16T21:35:06.340Z',
@@ -176,6 +192,7 @@ const mockPoints = [
     type: 'sightseeing',
   },
   {
+    // 16
     id: 'cf55edd0-d6c2-466d-bf24-142fd012a42c',
     basePrice: 4823,
     dateFrom: '2024-04-19T04:42:06.340Z',
@@ -186,6 +203,7 @@ const mockPoints = [
     type: 'restaurant',
   },
   {
+    // 17
     id: '218d265b-9e9d-45f2-81b6-9130f75cadc5',
     basePrice: 8639,
     dateFrom: '2024-04-20T15:39:06.340Z',
@@ -196,6 +214,7 @@ const mockPoints = [
     type: 'flight',
   },
   {
+    // 18
     id: '2d1ed75d-4b45-4ad5-9600-19a8dab8f48f',
     basePrice: 6807,
     dateFrom: '2024-04-21T20:13:06.340Z',
@@ -209,6 +228,7 @@ const mockPoints = [
     type: 'taxi',
   },
   {
+    // 19
     id: '57e2ffc7-a7ed-4762-a2ef-0be25d4fa64a',
     basePrice: 570,
     dateFrom: '2024-04-25T04:01:06.340Z',
@@ -219,6 +239,7 @@ const mockPoints = [
     type: 'sightseeing',
   },
   {
+    // 20
     id: '5a85d381-fe60-45f0-a5a2-520ae1715fd7',
     basePrice: 412,
     dateFrom: '2024-04-28T21:38:06.340Z',
@@ -232,6 +253,7 @@ const mockPoints = [
     type: 'ship',
   },
   {
+    // 21
     id: '6fd10d89-2e28-4f07-8dff-5c2c76c70d8e',
     basePrice: 3288,
     dateFrom: '2024-04-30T01:42:06.340Z',
@@ -246,6 +268,7 @@ const mockPoints = [
     type: 'taxi',
   },
   {
+    // 22
     id: 'ec981817-f1c9-4d48-906a-88023f206237',
     basePrice: 1284,
     dateFrom: '2024-05-01T23:02:06.340Z',
@@ -263,6 +286,7 @@ const mockPoints = [
     type: 'flight',
   },
   {
+    // 23
     id: '8f04ce9b-2134-4fbd-9b95-98e8941bcede',
     basePrice: 9705,
     dateFrom: '2024-05-05T00:31:06.340Z',
@@ -276,6 +300,7 @@ const mockPoints = [
     type: 'restaurant',
   },
   {
+    // 24
     id: '8561f429-075e-4bb2-9671-a10a3fd88b99',
     basePrice: 6042,
     dateFrom: '2024-05-07T07:16:06.340Z',

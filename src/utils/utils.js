@@ -9,7 +9,6 @@ import {
   MSEC_IN_DAY,
   MSEC_IN_HOUR,
   SHORT_EVENT_DURATION_TEMPLATE,
-  // TIME_TEMPLATE,
 } from '../const';
 
 dayjs.extend(duration);
@@ -20,9 +19,6 @@ const getDurationEvent = (dateFrom, dateTo) =>
 
 const humanizeDateCalendarFormat = (date) =>
   date ? dayjs(date).format(DATE_EVENT_TEMPLATE) : '';
-
-// const humanizeDateTimeFormat = (date) =>
-//   date ? dayjs(date).format(TIME_TEMPLATE) : '';
 
 const humanizeDateFormat = (date, template = INVERTED_SHORT_DATE_TEMPLATE) =>
   date ? dayjs(date).format(template) : '';
@@ -41,9 +37,31 @@ const humanizeDurationEvent = ({ dateFrom, dateTo }) => {
   return dayjs.duration(diffTimeshtamp).format(SHORT_EVENT_DURATION_TEMPLATE);
 };
 
+const getSelectedDestination = ({ point, destinations }) =>
+  destinations.find(({ id }) => id === point.destination);
+
+const getNameDestination = ({ destinationId, destinations }) =>
+  destinations.find((item) => destinationId === item.id)?.name ?? '';
+
+const getOffersByType = ({ point, offers }) =>
+  offers.find(({ type }) => point.type === type)?.offers ?? [];
+
+const getSelectedOffers = ({ point, offers }) => {
+  const offersByType = getOffersByType({ offers, point });
+
+  if (offersByType.length === 0) {
+    return [];
+  }
+
+  return offersByType.filter(({ id }) => point.offers.includes(id));
+};
+
 export {
   humanizeDateCalendarFormat,
-  // humanizeDateTimeFormat,
   humanizeDateFormat,
   humanizeDurationEvent,
+  getNameDestination,
+  getOffersByType,
+  getSelectedOffers,
+  getSelectedDestination,
 };

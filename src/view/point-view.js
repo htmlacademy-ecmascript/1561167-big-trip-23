@@ -4,7 +4,12 @@ import {
   TIME_TEMPLATE,
 } from '../const';
 import { createElement } from '../render';
-import { humanizeDateFormat, humanizeDurationEvent } from '../utils/utils';
+import {
+  getNameDestination,
+  getSelectedOffers,
+  humanizeDateFormat,
+  humanizeDurationEvent,
+} from '../utils/utils';
 
 const createSelectedOffersItemTemplate = ({ title, price }) => `
   <li class="event__offer">
@@ -97,15 +102,15 @@ export default class PoinView {
   }
 
   getTemplate = () => {
-    const nameDestination = this.destinations.find(
-      (item) => this.point.destination === item.id
-    ).name;
-    const offersByType = this.offers.find(
-      ({ type }) => this.point.type === type
-    ).offers;
-    const selectedOffers = offersByType.filter(({ id }) =>
-      this.point.offers.includes(id)
-    );
+    const nameDestination = getNameDestination({
+      destinationId: this.point.destination,
+      destinations: this.destinations,
+    });
+
+    const selectedOffers = getSelectedOffers({
+      offers: this.offers,
+      point: this.point,
+    });
 
     return createPointTemplate({
       point: this.point,

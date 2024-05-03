@@ -46,6 +46,17 @@ const SortType = {
   OFFERS: 'offers',
 };
 
+const BLANK_POINT = {
+  id: null,
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
+  destination: null,
+  isFavorite: false,
+  offers: [],
+  type: DEFAULT_POINT_TYPE,
+};
+
 export {
   MSEC_IN_DAY,
   MSEC_IN_HOUR,
@@ -63,4 +74,5 @@ export {
   DEFAULT_POINT_TYPE,
   FilterType,
   SortType,
+  BLANK_POINT,
 };
