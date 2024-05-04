@@ -4,6 +4,7 @@ import PointView from '../view/point-view';
 import PointListView from '../view/point-list-view';
 import SortView from '../view/sort-view';
 import { render } from '../framework/render';
+import PoinView from '../view/point-view';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -25,23 +26,30 @@ export default class BoardPresenter {
     render(new SortView(), this.#boardComponent.element);
     render(this.#pointListComponent, this.#boardComponent.element);
 
-    render(
-      new PointEditView({
-        point: this.#boardPoints[11],
+    // render(
+    //   new PointEditView({
+    //     point: this.#boardPoints[11],
+    //     destinations: this.#tripModel.destinations,
+    //     offers: this.#tripModel.offers,
+    //   }),
+    //   this.#pointListComponent.element
+    // );
+    for (let i = 0; i < this.#boardPoints.length; i++) {
+      this.#renderPoint({
+        point: this.#boardPoints[i],
         destinations: this.#tripModel.destinations,
         offers: this.#tripModel.offers,
-      }),
-      this.#pointListComponent.element
-    );
-    for (let i = 1; i < this.#boardPoints.length; i++) {
-      render(
-        new PointView({
-          point: this.#boardPoints[i],
-          destinations: this.#tripModel.destinations,
-          offers: this.#tripModel.offers,
-        }),
-        this.#pointListComponent.element
-      );
+      });
     }
+  };
+
+  #renderPoint = ({ point, destinations, offers }) => {
+    const pointComponent = new PoinView({
+      point,
+      destinations,
+      offers,
+    });
+
+    render(pointComponent, this.#pointListComponent.element);
   };
 }
