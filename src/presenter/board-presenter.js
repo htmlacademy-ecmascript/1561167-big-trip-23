@@ -1,9 +1,9 @@
-import { render } from '../render';
 import BoardView from '../view/board-view';
 import PointEditView from '../view/point-edit-view';
 import PointView from '../view/point-view';
 import PointListView from '../view/point-list-view';
 import SortView from '../view/sort-view';
+import { render } from '../framework/render';
 
 export default class BoardPresenter {
   boardComponent = new BoardView();
@@ -17,8 +17,8 @@ export default class BoardPresenter {
   init = () => {
     this.boardPoints = [...this.tripModel.points];
     render(this.boardComponent, this.boardContainer);
-    render(new SortView(), this.boardComponent.getElement());
-    render(this.pointListComponent, this.boardComponent.getElement());
+    render(new SortView(), this.boardComponent.element);
+    render(this.pointListComponent, this.boardComponent.element);
 
     render(
       new PointEditView({
@@ -26,7 +26,7 @@ export default class BoardPresenter {
         destinations: this.tripModel.destinations,
         offers: this.tripModel.offers,
       }),
-      this.pointListComponent.getElement()
+      this.pointListComponent.element
     );
     for (let i = 1; i < this.boardPoints.length; i++) {
       render(
@@ -35,7 +35,7 @@ export default class BoardPresenter {
           destinations: this.tripModel.destinations,
           offers: this.tripModel.offers,
         }),
-        this.pointListComponent.getElement()
+        this.pointListComponent.element
       );
     }
   };

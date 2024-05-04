@@ -1,5 +1,5 @@
 import { BLANK_POINT, PointType } from '../const';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import {
   getNameDestination,
   getOffersByType,
@@ -194,27 +194,19 @@ const createPointEditTemplate = ({ point, destinations, offers }) => {
   `;
 };
 
-export default class PointEditView {
+export default class PointEditView extends AbstractView {
   constructor({ point = BLANK_POINT, destinations, offers }) {
+    super();
     this.point = point;
     this.destinations = destinations;
     this.offers = offers;
   }
 
-  getTemplate = () =>
-    createPointEditTemplate({
+  get template() {
+    return createPointEditTemplate({
       point: this.point,
       offers: this.offers,
       destinations: this.destinations,
     });
-
-  getElement = () => {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  };
-
-  removeElement = () => (this.element = null);
+  }
 }

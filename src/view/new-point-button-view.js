@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 const createNewPointButtonTemplate = () => `
   <button class="trip-main__event-add-btn btn btn--big btn--yellow" type="button">
@@ -6,16 +6,8 @@ const createNewPointButtonTemplate = () => `
   </button>
 `;
 
-export default class NewPointButtonView {
-  getTemplate = () => createNewPointButtonTemplate();
-
-  getElement = () => {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  };
-
-  removeElement = () => (this.element = null);
+export default class NewPointButtonView extends AbstractView {
+  get template() {
+    return createNewPointButtonTemplate();
+  }
 }

@@ -3,7 +3,7 @@ import {
   MACHINE_DATE_TEMPLATE,
   TIME_TEMPLATE,
 } from '../const';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import {
   getNameDestination,
   getSelectedOffers,
@@ -94,14 +94,15 @@ const createPointTemplate = ({ point, nameDestination, selectedOffers }) => {
   `;
 };
 
-export default class PoinView {
+export default class PoinView extends AbstractView {
   constructor({ point, destinations, offers }) {
+    super();
     this.point = point;
     this.destinations = destinations;
     this.offers = offers;
   }
 
-  getTemplate = () => {
+  get template() {
     const nameDestination = getNameDestination({
       destinationId: this.point.destination,
       destinations: this.destinations,
@@ -117,15 +118,5 @@ export default class PoinView {
       nameDestination,
       selectedOffers,
     });
-  };
-
-  getElement = () => {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  };
-
-  removeElement = () => (this.element = null);
+  }
 }
