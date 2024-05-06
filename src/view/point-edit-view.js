@@ -135,6 +135,18 @@ const createPointEditTemplate = ({ point, destinations, offers }) => {
     destinations: destinations,
   });
   const destinationList = destinations.map(({ name }) => name);
+  const offersTemplate = createPointOffersTemplate({ point, offers });
+  const destinationTemplate = createPointDestinationTemplate({
+    point,
+    destinations,
+  });
+  const isShowDetails =
+    offersTemplate.length !== 0 || destinationTemplate.length !== 0;
+  const detailsTemplate = `
+    <section class="event__details">
+      ${offersTemplate}
+      ${destinationTemplate}
+    </section>`;
   return `
     <li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -185,10 +197,7 @@ const createPointEditTemplate = ({ point, destinations, offers }) => {
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Cancel</button>
         </header>
-        <section class="event__details">
-          ${createPointOffersTemplate({ point, offers })}
-          ${createPointDestinationTemplate({ point, destinations })}
-        </section>
+        ${isShowDetails ? detailsTemplate : ''}
       </form>
     </li>
   `;

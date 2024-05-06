@@ -26,14 +26,14 @@ export default class BoardPresenter {
     render(new SortView(), this.#boardComponent.element);
     render(this.#pointListComponent, this.#boardComponent.element);
 
-    // render(
-    //   new PointEditView({
-    //     point: this.#boardPoints[11],
-    //     destinations: this.#tripModel.destinations,
-    //     offers: this.#tripModel.offers,
-    //   }),
-    //   this.#pointListComponent.element
-    // );
+    render(
+      new PointEditView({
+        point: this.#boardPoints[1],
+        destinations: this.#tripModel.destinations,
+        offers: this.#tripModel.offers,
+      }),
+      this.#pointListComponent.element
+    );
     for (let i = 0; i < this.#boardPoints.length; i++) {
       this.#renderPoint({
         point: this.#boardPoints[i],
