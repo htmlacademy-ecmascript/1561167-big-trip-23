@@ -204,18 +204,34 @@ const createPointEditTemplate = ({ point, destinations, offers }) => {
 };
 
 export default class PointEditView extends AbstractView {
-  constructor({ point = BLANK_POINT, destinations, offers }) {
+  #point = null;
+  #destinations = null;
+  #offers = null;
+
+  #handleFormSubmit = null;
+
+  constructor({ point = BLANK_POINT, destinations, offers, onFormSubmit }) {
     super();
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleFormSubmit = onFormSubmit;
+
+    this.element
+      .querySelector('.event--edit')
+      .addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createPointEditTemplate({
-      point: this.point,
-      offers: this.offers,
-      destinations: this.destinations,
+      point: this.#point,
+      offers: this.#offers,
+      destinations: this.#destinations,
     });
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }

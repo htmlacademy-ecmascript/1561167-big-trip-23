@@ -1,9 +1,8 @@
 import BoardView from '../view/board-view';
 import PointEditView from '../view/point-edit-view';
-import PointView from '../view/point-view';
 import PointListView from '../view/point-list-view';
 import SortView from '../view/sort-view';
-import { render } from '../framework/render';
+import { render, replace } from '../framework/render';
 import PoinView from '../view/point-view';
 
 export default class BoardPresenter {
@@ -26,14 +25,6 @@ export default class BoardPresenter {
     render(new SortView(), this.#boardComponent.element);
     render(this.#pointListComponent, this.#boardComponent.element);
 
-    render(
-      new PointEditView({
-        point: this.#boardPoints[1],
-        destinations: this.#tripModel.destinations,
-        offers: this.#tripModel.offers,
-      }),
-      this.#pointListComponent.element
-    );
     for (let i = 0; i < this.#boardPoints.length; i++) {
       this.#renderPoint({
         point: this.#boardPoints[i],
@@ -44,11 +35,43 @@ export default class BoardPresenter {
   };
 
   #renderPoint = ({ point, destinations, offers }) => {
+    const escKeyDownHandler = (evt) => {
+      if (evt.key !== 'Escape') {
+        return;
+      }
+
+      evt.preventDefault();
+      replaceFormToCard();
+      document.removeEventListener('keydown', escKeyDownHandler);
+    };
+
     const pointComponent = new PoinView({
       point,
       destinations,
       offers,
+      onEditClick: () => {
+        replaceCardToForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      },
     });
+
+    const pointEditComponent = new PointEditView({
+      point,
+      destinations,
+      offers,
+      onFormSubmit: () => {
+        replaceFormToCard();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+    });
+
+    function replaceCardToForm() {
+      replace(pointEditComponent, pointComponent);
+    }
+
+    function replaceFormToCard() {
+      replace(pointComponent, pointEditComponent);
+    }
 
     render(pointComponent, this.#pointListComponent.element);
   };
