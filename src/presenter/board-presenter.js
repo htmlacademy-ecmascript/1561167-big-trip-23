@@ -21,6 +21,10 @@ export default class BoardPresenter {
 
   init = () => {
     this.#boardPoints = [...this.#tripModel.points];
+    this.#renderBoard();
+  };
+
+  #renderBoard = () => {
     render(this.#boardComponent, this.#boardContainer);
     render(new SortView(), this.#boardComponent.element);
     render(this.#pointListComponent, this.#boardComponent.element);
