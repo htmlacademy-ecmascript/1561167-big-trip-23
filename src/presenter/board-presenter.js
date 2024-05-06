@@ -36,13 +36,13 @@ export default class BoardPresenter {
     render(new SortView(), this.#boardComponent.element);
     render(this.#pointListComponent, this.#boardComponent.element);
 
-    for (let i = 0; i < this.#boardPoints.length; i++) {
+    this.#boardPoints.forEach((point) =>
       this.#renderPoint({
-        point: this.#boardPoints[i],
+        point,
         destinations: this.#tripModel.destinations,
         offers: this.#tripModel.offers,
-      });
-    }
+      })
+    );
   };
 
   #renderPoint = ({ point, destinations, offers }) => {
