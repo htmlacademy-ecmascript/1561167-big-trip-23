@@ -4,6 +4,7 @@ import PointListView from '../view/point-list-view';
 import SortView from '../view/sort-view';
 import { render, replace } from '../framework/render';
 import PoinView from '../view/point-view';
+import NoPointView from '../view/no-point-view';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -12,7 +13,7 @@ export default class BoardPresenter {
   #boardComponent = new BoardView();
   #pointListComponent = new PointListView();
 
-  #boardPoints = null;
+  #boardPoints = [];
 
   constructor({ boardContainer, tripModel }) {
     this.#boardContainer = boardContainer;
@@ -26,6 +27,12 @@ export default class BoardPresenter {
 
   #renderBoard = () => {
     render(this.#boardComponent, this.#boardContainer);
+
+    if (this.#boardPoints.length === 0) {
+      render(new NoPointView(), this.#boardComponent.element);
+      return;
+    }
+
     render(new SortView(), this.#boardComponent.element);
     render(this.#pointListComponent, this.#boardComponent.element);
 
