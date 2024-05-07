@@ -195,7 +195,10 @@ const createPointEditTemplate = ({ point, destinations, offers }) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
         </header>
         ${isShowDetails ? detailsTemplate : ''}
       </form>
@@ -209,17 +212,28 @@ export default class PointEditView extends AbstractView {
   #offers = null;
 
   #handleFormSubmit = null;
+  #handleFormCloseClick = null;
 
-  constructor({ point = BLANK_POINT, destinations, offers, onFormSubmit }) {
+  constructor({
+    point = BLANK_POINT,
+    destinations,
+    offers,
+    onFormSubmit,
+    onFormCloseClick,
+  }) {
     super();
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleFormCloseClick = onFormCloseClick;
 
     this.element
       .querySelector('.event--edit')
       .addEventListener('submit', this.#formSubmitHandler);
+    this.element
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#formCloseClickHandler);
   }
 
   get template() {
@@ -233,5 +247,10 @@ export default class PointEditView extends AbstractView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit();
+  };
+
+  #formCloseClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormCloseClick();
   };
 }
