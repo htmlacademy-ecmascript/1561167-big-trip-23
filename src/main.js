@@ -1,6 +1,6 @@
+import { render } from './framework/render';
 import TripModel from './model/trip-model';
 import BoardPresenter from './presenter/board-presenter';
-import { render } from './render';
 import FilterView from './view/filter-view';
 import NewPointButtonView from './view/new-point-button-view';
 

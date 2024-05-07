@@ -1,5 +1,5 @@
 import { SortType } from '../const';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 const createSortItemTemplate = (sortType, isCurrent) => `
   <div class="trip-sort__item  trip-sort__item--${sortType}">
@@ -25,16 +25,8 @@ const createSortTemplate = () => {
   `;
 };
 
-export default class SortView {
-  getTemplate = () => createSortTemplate();
-
-  getElement = () => {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  };
-
-  removeElement = () => (this.element = null);
+export default class SortView extends AbstractView {
+  get template() {
+    return createSortTemplate();
+  }
 }

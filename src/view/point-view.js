@@ -3,7 +3,7 @@ import {
   MACHINE_DATE_TEMPLATE,
   TIME_TEMPLATE,
 } from '../const';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import {
   getNameDestination,
   getSelectedOffers,
@@ -94,38 +94,45 @@ const createPointTemplate = ({ point, nameDestination, selectedOffers }) => {
   `;
 };
 
-export default class PoinView {
-  constructor({ point, destinations, offers }) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+export default class PoinView extends AbstractView {
+  #point = null;
+  #destinations = null;
+  #offers = null;
+
+  #handleEditClick = null;
+
+  constructor({ point, destinations, offers, onEditClick }) {
+    super();
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleEditClick = onEditClick;
+
+    this.element
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#editClickHandler);
   }
 
-  getTemplate = () => {
+  get template() {
     const nameDestination = getNameDestination({
-      destinationId: this.point.destination,
-      destinations: this.destinations,
+      destinationId: this.#point.destination,
+      destinations: this.#destinations,
     });
 
     const selectedOffers = getSelectedOffers({
-      offers: this.offers,
-      point: this.point,
+      offers: this.#offers,
+      point: this.#point,
     });
 
     return createPointTemplate({
-      point: this.point,
+      point: this.#point,
       nameDestination,
       selectedOffers,
     });
+  }
+
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
   };
-
-  getElement = () => {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  };
-
-  removeElement = () => (this.element = null);
 }

@@ -1,5 +1,5 @@
 import { BLANK_POINT, PointType } from '../const';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import {
   getNameDestination,
   getOffersByType,
@@ -135,6 +135,18 @@ const createPointEditTemplate = ({ point, destinations, offers }) => {
     destinations: destinations,
   });
   const destinationList = destinations.map(({ name }) => name);
+  const offersTemplate = createPointOffersTemplate({ point, offers });
+  const destinationTemplate = createPointDestinationTemplate({
+    point,
+    destinations,
+  });
+  const isShowDetails =
+    offersTemplate.length !== 0 || destinationTemplate.length !== 0;
+  const detailsTemplate = `
+    <section class="event__details">
+      ${offersTemplate}
+      ${destinationTemplate}
+    </section>`;
   return `
     <li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -183,38 +195,62 @@ const createPointEditTemplate = ({ point, destinations, offers }) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
         </header>
-        <section class="event__details">
-          ${createPointOffersTemplate({ point, offers })}
-          ${createPointDestinationTemplate({ point, destinations })}
-        </section>
+        ${isShowDetails ? detailsTemplate : ''}
       </form>
     </li>
   `;
 };
 
-export default class PointEditView {
-  constructor({ point = BLANK_POINT, destinations, offers }) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+export default class PointEditView extends AbstractView {
+  #point = null;
+  #destinations = null;
+  #offers = null;
+
+  #handleFormSubmit = null;
+  #handleFormCloseClick = null;
+
+  constructor({
+    point = BLANK_POINT,
+    destinations,
+    offers,
+    onFormSubmit,
+    onFormCloseClick,
+  }) {
+    super();
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleFormCloseClick = onFormCloseClick;
+
+    this.element
+      .querySelector('.event--edit')
+      .addEventListener('submit', this.#formSubmitHandler);
+    this.element
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#formCloseClickHandler);
   }
 
-  getTemplate = () =>
-    createPointEditTemplate({
-      point: this.point,
-      offers: this.offers,
-      destinations: this.destinations,
+  get template() {
+    return createPointEditTemplate({
+      point: this.#point,
+      offers: this.#offers,
+      destinations: this.#destinations,
     });
+  }
 
-  getElement = () => {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
   };
 
-  removeElement = () => (this.element = null);
+  #formCloseClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormCloseClick();
+  };
 }
