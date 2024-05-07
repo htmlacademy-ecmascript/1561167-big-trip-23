@@ -1,4 +1,5 @@
 import { render } from './framework/render';
+import { generateFilter } from './mock/filter';
 import TripModel from './model/trip-model';
 import BoardPresenter from './presenter/board-presenter';
 import FilterView from './view/filter-view';
@@ -18,8 +19,9 @@ const boardPresenter = new BoardPresenter({
   boardContainer: boardContainerElement,
   tripModel,
 });
+const filters = generateFilter(tripModel.points);
 
-render(new FilterView(), controlsFiltersElement);
+render(new FilterView({ filters }), controlsFiltersElement);
 render(new NewPointButtonView(), siteHeaderElement);
 
 boardPresenter.init();
