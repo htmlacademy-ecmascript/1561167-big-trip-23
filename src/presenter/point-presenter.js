@@ -1,3 +1,4 @@
+import { ModeCard } from '../const';
 import { remove, render, replace } from '../framework/render';
 import PointEditView from '../view/point-edit-view';
 import PoinView from '../view/point-view';
@@ -14,11 +15,21 @@ export default class PointPresenter {
 
   #handleDataChange = null;
 
-  constructor({ pointListContainer, offers, destinations, onDataChange }) {
+  #mode = ModeCard.DEFAULT;
+  #handleModeChange = null;
+
+  constructor({
+    pointListContainer,
+    offers,
+    destinations,
+    onDataChange,
+    onModeChange,
+  }) {
     this.#pointListContainer = pointListContainer;
     this.#offers = offers;
     this.#destinatios = destinations;
     this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
   }
 
   init = (point) => {
@@ -48,16 +59,22 @@ export default class PointPresenter {
       return;
     }
 
-    if (this.#pointListContainer.contains(prevPointComponent.element)) {
+    if (this.#mode === ModeCard.DEFAULT) {
       replace(this.#pointComponent, prevPointComponent);
     }
 
-    if (this.#pointListContainer.contains(prevPointEditComponent.element)) {
+    if (this.#mode === ModeCard.EDITING) {
       replace(this.#pointEditComponent, prevPointEditComponent);
     }
 
     remove(prevPointComponent);
     remove(prevPointEditComponent);
+  };
+
+  resetView = () => {
+    if (this.#mode !== ModeCard.DEFAULT) {
+      this.#replaceFormToCard();
+    }
   };
 
   destroy = () => {
@@ -68,11 +85,14 @@ export default class PointPresenter {
   #replaceCardToForm = () => {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#handleModeChange();
+    this.#mode = ModeCard.EDITING;
   };
 
   #replaceFormToCard = () => {
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = ModeCard.DEFAULT;
   };
 
   #handleFavoriteClick = () =>
@@ -83,7 +103,10 @@ export default class PointPresenter {
 
   #handleFormCloseClick = () => this.#replaceFormToCard();
 
-  #handleFormSubmit = () => this.#replaceFormToCard();
+  #handleFormSubmit = (point) => {
+    this.#handleDataChange(point);
+    this.#replaceFormToCard();
+  };
 
   #handleEditClick = () => this.#replaceCardToForm();
 
