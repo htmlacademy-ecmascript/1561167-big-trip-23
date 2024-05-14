@@ -57,6 +57,11 @@ const BLANK_POINT = {
   type: DEFAULT_POINT_TYPE,
 };
 
+const ModeCard = {
+  DEFAULT: 'dafault',
+  EDITING: 'editing',
+};
+
 export {
   MSEC_IN_DAY,
   MSEC_IN_HOUR,
@@ -75,4 +80,5 @@ export {
   FilterType,
   SortType,
   BLANK_POINT,
+  ModeCard,
 };
