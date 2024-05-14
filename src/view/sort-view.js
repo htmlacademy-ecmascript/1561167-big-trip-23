@@ -1,22 +1,25 @@
-import { SortType } from '../const';
+import { SortTypes } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
-const createSortItemTemplate = (sortType, isCurrent) => `
-  <div class="trip-sort__item  trip-sort__item--${sortType}">
-    <input id="sort-${sortType}"
+const createSortItemTemplate = ({ type, isExecutable }, isChecked) => `
+  <div class="trip-sort__item  trip-sort__item--${type}">
+    <input id="sort-${type}"
       class="trip-sort__input visually-hidden"
       type="radio"
-      name="trip-sort"
-      value="sort-${sortType}"
-      ${isCurrent ? 'checked' : ''}>
-    <label class="trip-sort__btn" for="sort-${sortType}">${sortType}</label>
+      name="tri p-sort"
+      value="sort-${type}"
+      ${isChecked ? 'checked' : ''}
+      ${isExecutable ? '' : 'disabled'}>
+    <label class="trip-sort__btn"
+      for="sort-${type}"
+      data-sort-type="${type}">${type}</label>
   </div>
-`;
+  `;
 
-const createSortTemplate = () => {
-  const sortItemTemplate = Object.values(SortType)
-    .map((sort, index) => createSortItemTemplate(sort, index === 0))
-    .join('');
+const createSortTemplate = (defaultSortType) => {
+  const sortItemTemplate = SortTypes.map((sort) =>
+    createSortItemTemplate(sort, sort.type === defaultSortType)
+  ).join('');
 
   return `
     <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -26,7 +29,43 @@ const createSortTemplate = () => {
 };
 
 export default class SortView extends AbstractView {
-  get template() {
-    return createSortTemplate();
+  #defaultSortType = null;
+  #handleSortTypeChange = null;
+  #sortInputElements = null;
+
+  constructor({ onSortTypeChange, defaultSortType }) {
+    super();
+    this.#defaultSortType = defaultSortType;
+    this.#handleSortTypeChange = onSortTypeChange;
+
+    this.#sortInputElements = [
+      ...this.element.querySelectorAll('.trip-sort__input'),
+    ];
+
+    this.element.addEventListener('click', this.#sortTypeChangeHandler);
   }
+
+  get template() {
+    return createSortTemplate(this.#defaultSortType);
+  }
+
+  #sortTypeChangeHandler = (evt) => {
+    if (evt.target.tagName !== 'LABEL') {
+      return;
+    }
+
+    const targetSortType = evt.target.dataset.sortType;
+    const isExecutable = SortTypes.find(
+      ({ type }) => type === targetSortType
+    ).isExecutable;
+
+    evt.preventDefault();
+
+    if (isExecutable) {
+      this.#sortInputElements.forEach((element) => {
+        element.checked = element.id === `sort-${targetSortType}`;
+      });
+      this.#handleSortTypeChange(targetSortType);
+    }
+  };
 }

@@ -5,6 +5,9 @@ import { render } from '../framework/render';
 import NoPointView from '../view/no-point-view';
 import PointPresenter from './point-presenter';
 import { updateItem } from '../utils/common';
+import { INDEX_DEFAULT_SORTING_ITEM, SortTypes } from '../const';
+import { compareByDuration, compareByPrice } from '../utils/utils';
+import { sort } from '../utils/sort';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -14,9 +17,12 @@ export default class BoardPresenter {
   #pointListComponent = new PointListView();
 
   #boardPoints = [];
+  #sourcedBoardPoints = [];
   #pointPresenters = new Map();
 
-  #sortComponent = new SortView();
+  #sortComponent = null;
+  #currentSortType = SortTypes[INDEX_DEFAULT_SORTING_ITEM].type;
+
   #noPointComponent = new NoPointView();
 
   constructor({ boardContainer, tripModel }) {
@@ -26,7 +32,27 @@ export default class BoardPresenter {
 
   init = () => {
     this.#boardPoints = [...this.#tripModel.points];
+    this.#sourcedBoardPoints = [...this.#tripModel.points];
     this.#renderBoard();
+  };
+
+  #sortPoints = (sortType) => {
+    switch (sortType) {
+      case sort.TIME:
+        this.#boardPoints.sort(compareByDuration);
+        break;
+      case sort.PRICE:
+        this.#boardPoints.sort(compareByPrice);
+        break;
+      default:
+        this.#boardPoints = [...this.#sourcedBoardPoints];
+    }
+    this.#currentSortType = sortType;
+  };
+
+  #clearPointList = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
   };
 
   #renderBoard = () => {
@@ -46,15 +72,16 @@ export default class BoardPresenter {
     this.#renderPoints();
   };
 
-  #clearPointList = () => {
-    this.#pointPresenters.forEach((presenter) => presenter.destroy());
-    this.#pointPresenters.clear();
-  };
-
   #renderPoints = () =>
     this.#boardPoints.forEach((point) => this.#renderPoint(point));
 
-  #renderSort = () => render(this.#sortComponent, this.#boardComponent.element);
+  #renderSort = () => {
+    this.#sortComponent = new SortView({
+      defaultSortType: this.#currentSortType,
+      onSortTypeChange: this.#handleSortTypeChange,
+    });
+    render(this.#sortComponent, this.#boardComponent.element);
+  };
 
   #renderNoPoint = () =>
     render(this.#noPointComponent, this.#boardComponent.element);
@@ -74,7 +101,21 @@ export default class BoardPresenter {
 
   #handlePointChange = (updatedPoint) => {
     this.#boardPoints = updateItem(updatedPoint, this.#boardPoints);
+    this.#sourcedBoardPoints = updateItem(
+      updatedPoint,
+      this.#sourcedBoardPoints
+    );
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortPoints(sortType);
+    this.#clearPointList();
+    this.#renderPoints();
   };
 
   #handleModeChange = () =>

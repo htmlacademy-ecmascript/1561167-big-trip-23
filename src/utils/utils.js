@@ -63,6 +63,18 @@ const isPointPresent = ({ dateFrom, dateTo }) =>
 
 const isPointPast = ({ dateTo }) => dayjs().isAfter(dateTo);
 
+const getDurationPoint = (dateFrom, dateTo) =>
+  dayjs(dateTo).diff(dayjs(dateFrom));
+
+const compareByDuration = (pointA, pointB) => {
+  const durrationPointA = getDurationPoint(pointA.dateFrom, pointA.dateTo);
+  const durrationPointB = getDurationPoint(pointB.dateFrom, pointB.dateTo);
+
+  return durrationPointB - durrationPointA;
+};
+
+const compareByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
+
 export {
   humanizeDateCalendarFormat,
   humanizeDateFormat,
@@ -74,4 +86,6 @@ export {
   isPointFuture,
   isPointPresent,
   isPointPast,
+  compareByPrice,
+  compareByDuration,
 };
