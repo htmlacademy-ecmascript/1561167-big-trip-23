@@ -1,4 +1,4 @@
-import { SortTypes } from '../const';
+import { SortingType } from '../const';
 import AbstractView from '../framework/view/abstract-view';
 
 const createSortItemTemplate = ({ type, isExecutable }, isChecked) => `
@@ -17,9 +17,14 @@ const createSortItemTemplate = ({ type, isExecutable }, isChecked) => `
   `;
 
 const createSortTemplate = (defaultSortType) => {
-  const sortItemTemplate = SortTypes.map((sort) =>
-    createSortItemTemplate(sort, sort.type === defaultSortType)
-  ).join('');
+  const sortItemTemplate = Object.entries(SortingType)
+    .map(([sorting, [type, isExecutable]]) =>
+      createSortItemTemplate(
+        { type, isExecutable },
+        sorting.toLowerCase() === defaultSortType
+      )
+    )
+    .join('');
 
   return `
     <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -50,22 +55,19 @@ export default class SortView extends AbstractView {
   }
 
   #sortTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== 'LABEL') {
+    if (!evt.target.dataset.sortType) {
       return;
     }
 
     const targetSortType = evt.target.dataset.sortType;
-    const isExecutable = SortTypes.find(
-      ({ type }) => type === targetSortType
-    ).isExecutable;
-
+    const [type, isExecutable] = SortingType[targetSortType.toUpperCase()];
     evt.preventDefault();
 
     if (isExecutable) {
       this.#sortInputElements.forEach((element) => {
         element.checked = element.id === `sort-${targetSortType}`;
       });
-      this.#handleSortTypeChange(targetSortType);
+      this.#handleSortTypeChange(type);
     }
   };
 }

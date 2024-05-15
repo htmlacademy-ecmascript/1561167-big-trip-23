@@ -5,9 +5,8 @@ import { render } from '../framework/render';
 import NoPointView from '../view/no-point-view';
 import PointPresenter from './point-presenter';
 import { updateItem } from '../utils/common';
-import { INDEX_DEFAULT_SORTING_ITEM, SortTypes } from '../const';
+import { DEFAULT_SORTING_ITEM, SortingType } from '../const';
 import { compareByDuration, compareByPrice } from '../utils/utils';
-import { sort } from '../utils/sort';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -21,7 +20,7 @@ export default class BoardPresenter {
   #pointPresenters = new Map();
 
   #sortComponent = null;
-  #currentSortType = SortTypes[INDEX_DEFAULT_SORTING_ITEM].type;
+  #currentSortType = SortingType[DEFAULT_SORTING_ITEM][0];
 
   #noPointComponent = new NoPointView();
 
@@ -38,10 +37,10 @@ export default class BoardPresenter {
 
   #sortPoints = (sortType) => {
     switch (sortType) {
-      case sort.TIME:
+      case SortingType.TIME[0]:
         this.#boardPoints.sort(compareByDuration);
         break;
-      case sort.PRICE:
+      case SortingType.PRICE[0]:
         this.#boardPoints.sort(compareByPrice);
         break;
       default:
