@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import {
+  ALLOWED_SORTING_TYPES,
   AVERAGE_EVENT_DURATION_TEMPLATE,
   DATE_EVENT_TEMPLATE,
   INVERTED_SHORT_DATE_TEMPLATE,
@@ -73,6 +74,9 @@ const compareByDuration = (pointA, pointB) => {
   return durrationPointB - durrationPointA;
 };
 
+const isAllowedSortingType = (sortingType) =>
+  ALLOWED_SORTING_TYPES.includes(sortingType);
+
 const compareByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 
 export {
@@ -88,4 +92,5 @@ export {
   isPointPast,
   compareByPrice,
   compareByDuration,
+  isAllowedSortingType,
 };

@@ -39,14 +39,20 @@ const FilterType = {
 };
 
 const SortingType = {
-  DAY: ['day', true],
-  EVENT: ['event', false],
-  TIME: ['time', true],
-  PRICE: ['price', true],
-  OFFERS: ['offers', false],
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers',
 };
 
-const DEFAULT_SORTING_ITEM = 'DAY';
+const ALLOWED_SORTING_TYPES = [
+  SortingType.DAY,
+  SortingType.TIME,
+  SortingType.PRICE,
+];
+
+const DEFAULT_SORTING_TYPE = SortingType.DAY;
 
 const BLANK_POINT = {
   id: null,
@@ -81,7 +87,8 @@ export {
   DEFAULT_POINT_TYPE,
   FilterType,
   SortingType,
-  DEFAULT_SORTING_ITEM,
+  DEFAULT_SORTING_TYPE,
   BLANK_POINT,
   ModeCard,
+  ALLOWED_SORTING_TYPES,
 };
