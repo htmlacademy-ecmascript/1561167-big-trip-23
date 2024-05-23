@@ -29,6 +29,10 @@ export default class BoardPresenter {
     this.#tripModel = tripModel;
   }
 
+  get points() {
+    return this.#tripModel.points;
+  }
+
   init = () => {
     this.#boardPoints = [...this.#tripModel.points];
     this.#sourcedBoardPoints = [...this.#tripModel.points];
