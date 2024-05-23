@@ -15,7 +15,7 @@ export default class PointPresenter {
 
   #handleDataChange = null;
 
-  #mode = ModeCard.DEFAULT;
+  #mode = ModeCard.CARD;
   #handleModeChange = null;
 
   constructor({
@@ -59,7 +59,7 @@ export default class PointPresenter {
       return;
     }
 
-    if (this.#mode === ModeCard.DEFAULT) {
+    if (this.#mode === ModeCard.CARD) {
       replace(this.#pointComponent, prevPointComponent);
     }
 
@@ -72,7 +72,8 @@ export default class PointPresenter {
   };
 
   resetView = () => {
-    if (this.#mode !== ModeCard.DEFAULT) {
+    if (this.#mode !== ModeCard.CARD) {
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToCard();
     }
   };
@@ -92,7 +93,7 @@ export default class PointPresenter {
   #replaceFormToCard = () => {
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = ModeCard.DEFAULT;
+    this.#mode = ModeCard.CARD;
   };
 
   #handleFavoriteClick = () =>
@@ -101,7 +102,10 @@ export default class PointPresenter {
       isFavorite: !this.#point.isFavorite,
     });
 
-  #handleFormCloseClick = () => this.#replaceFormToCard();
+  #handleFormCloseClick = () => {
+    this.#pointEditComponent.reset(this.#point);
+    this.#replaceFormToCard();
+  };
 
   #handleFormSubmit = (point) => {
     this.#handleDataChange(point);
@@ -116,6 +120,7 @@ export default class PointPresenter {
     }
 
     evt.preventDefault();
+    this.#pointEditComponent.reset(this.#point);
     this.#replaceFormToCard();
   };
 }
