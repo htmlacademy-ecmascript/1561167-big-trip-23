@@ -66,7 +66,7 @@ const BLANK_POINT = {
 };
 
 const ModeCard = {
-  DEFAULT: 'dafault',
+  CARD: 'card',
   EDITING: 'editing',
 };
 

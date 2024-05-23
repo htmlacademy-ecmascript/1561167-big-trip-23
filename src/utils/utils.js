@@ -25,6 +25,10 @@ const humanizeDateFormat = (date, template = INVERTED_SHORT_DATE_TEMPLATE) =>
   date ? dayjs(date).format(template) : '';
 
 const humanizeDurationEvent = ({ dateFrom, dateTo }) => {
+  if (dateFrom === null || dateTo === null) {
+    return '';
+  }
+
   const diffTimeshtamp = getDurationEvent(dateFrom, dateTo);
 
   if (diffTimeshtamp >= MSEC_IN_DAY) {
@@ -35,6 +39,7 @@ const humanizeDurationEvent = ({ dateFrom, dateTo }) => {
       .duration(diffTimeshtamp)
       .format(AVERAGE_EVENT_DURATION_TEMPLATE);
   }
+
   return dayjs.duration(diffTimeshtamp).format(SHORT_EVENT_DURATION_TEMPLATE);
 };
 
@@ -43,6 +48,12 @@ const getSelectedDestination = ({ point, destinations }) =>
 
 const getNameDestination = ({ destinationId, destinations }) =>
   destinations.find((item) => destinationId === item.id)?.name ?? '';
+
+const getDestinationIdByName = ({ name, destinations }) =>
+  destinations.find(
+    ({ name: nameDectination }) =>
+      nameDectination.toLowerCase() === name.toLowerCase()
+  )?.id ?? '';
 
 const getOffersByType = ({ point, offers }) =>
   offers.find(({ type }) => point.type === type)?.offers ?? [];
@@ -56,6 +67,23 @@ const getSelectedOffers = ({ point, offers }) => {
 
   return offersByType.filter(({ id }) => point.offers.includes(id));
 };
+
+const hasDetailsDestination = ({ point, destinations }) => {
+  const { description = '', pictures = [] } =
+    getSelectedDestination({
+      point,
+      destinations,
+    }) ?? {};
+  return description.length !== 0 || pictures.length !== 0;
+};
+
+const hasNameInDestinations = ({ name, destinations }) =>
+  Boolean(
+    destinations.find(
+      ({ name: nameDestination }) =>
+        nameDestination.toLowerCase() === name.toLowerCase()
+    )
+  );
 
 const isPointFuture = ({ dateFrom }) => dayjs().isBefore(dateFrom);
 
@@ -92,5 +120,8 @@ export {
   isPointPast,
   compareByPrice,
   compareByDuration,
+  hasDetailsDestination,
+  getDestinationIdByName,
+  hasNameInDestinations,
   isAllowedSortingType,
 };
