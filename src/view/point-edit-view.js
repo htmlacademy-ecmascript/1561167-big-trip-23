@@ -226,6 +226,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   #handleFormSubmit = null;
   #handleFormCloseClick = null;
+  #handleFormDeleteClick = null;
 
   #offerElements = null;
 
@@ -238,6 +239,7 @@ export default class PointEditView extends AbstractStatefulView {
     offers,
     onFormSubmit,
     onFormCloseClick,
+    onFormDeleteClick,
   }) {
     super();
     this.#destinations = destinations;
@@ -250,6 +252,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormCloseClick = onFormCloseClick;
+    this.#handleFormDeleteClick = onFormDeleteClick;
 
     this._restoreHandlers();
   }
@@ -300,6 +303,9 @@ export default class PointEditView extends AbstractStatefulView {
     this.element
       .querySelector('.event__input--price')
       .addEventListener('input', this.#priceInputHandler);
+    this.element
+      .querySelector('.event__reset-btn')
+      .addEventListener('click', this.#formDeleteClickHandler);
 
     if (sectionOffersElement !== null) {
       sectionOffersElement.addEventListener(
@@ -416,6 +422,11 @@ export default class PointEditView extends AbstractStatefulView {
     });
 
     this._setState({ offers });
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormDeleteClick(PointEditView.parseStateToPoint(this._state));
   };
 
   static parsePointToState = ({ point, destinations }) => {

@@ -61,11 +61,6 @@ export default class BoardPresenter {
     this.#renderPoints(this.points);
   };
 
-  // #renderPointList = () => {
-  //   render(this.#pointListComponent, this.#boardComponent.element);
-  //   this.#renderPoints(this.points);
-  // };
-
   #renderPoints = (points) =>
     points.forEach((point) => this.#renderPoint(point));
 
@@ -93,10 +88,6 @@ export default class BoardPresenter {
   #renderNoPoint = () =>
     render(this.#noPointComponent, this.#boardComponent.element);
 
-  // #clearPointList = () => {
-  //   this.#pointPresenters.forEach((presenter) => presenter.destroy());
-  //   this.#pointPresenters.clear();
-  // };
   #clearBoard = (resetSortType = false) => {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
@@ -129,9 +120,7 @@ export default class BoardPresenter {
         this.#pointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        // this.#clearPointList();
         this.#clearBoard();
-        // this.#renderPointList();
         this.#renderBoard();
         break;
       case UpdateType.MAJOR:
@@ -147,9 +136,7 @@ export default class BoardPresenter {
     }
 
     this.#currentSortType = sortType;
-    // this.#clearPointList();
     this.#clearBoard();
-    // this.#renderPointList();
     this.#renderBoard();
   };
 
