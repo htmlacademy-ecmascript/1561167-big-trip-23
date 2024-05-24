@@ -70,6 +70,18 @@ const ModeCard = {
   EDITING: 'editing',
 };
 
+const UserAction = {
+  UPDATE_POINT: 'update_point',
+  ADD_POINT: 'add_point',
+  DELETE_POINT: 'delete_point',
+};
+
+const UpdateType = {
+  PATCH: 'patch',
+  MINOR: 'minor',
+  MAJOR: 'major',
+};
+
 export {
   MSEC_IN_DAY,
   MSEC_IN_HOUR,
@@ -91,4 +103,6 @@ export {
   BLANK_POINT,
   ModeCard,
   ALLOWED_SORTING_TYPES,
+  UserAction,
+  UpdateType,
 };

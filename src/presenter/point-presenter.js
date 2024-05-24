@@ -1,4 +1,4 @@
-import { ModeCard } from '../const';
+import { ModeCard, UpdateType, UserAction } from '../const';
 import { remove, render, replace } from '../framework/render';
 import PointEditView from '../view/point-edit-view';
 import PoinView from '../view/point-view';
@@ -97,7 +97,7 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () =>
-    this.#handleDataChange({
+    this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, {
       ...this.#point,
       isFavorite: !this.#point.isFavorite,
     });
@@ -108,7 +108,7 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (point) => {
-    this.#handleDataChange(point);
+    this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
     this.#replaceFormToCard();
   };
 
