@@ -43,6 +43,9 @@ const humanizeDurationEvent = ({ dateFrom, dateTo }) => {
   return dayjs.duration(diffTimeshtamp).format(SHORT_EVENT_DURATION_TEMPLATE);
 };
 
+const isDatesEqual = (dateA, dateB) =>
+  (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB);
+
 const getSelectedDestination = ({ point, destinations }) =>
   destinations.find(({ id }) => id === point.destination);
 
@@ -111,6 +114,7 @@ export {
   humanizeDateCalendarFormat,
   humanizeDateFormat,
   humanizeDurationEvent,
+  isDatesEqual,
   getNameDestination,
   getOffersByType,
   getSelectedOffers,

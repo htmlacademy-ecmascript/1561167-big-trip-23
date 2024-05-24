@@ -1,5 +1,6 @@
 import { ModeCard, UpdateType, UserAction } from '../const';
 import { remove, render, replace } from '../framework/render';
+import { isDatesEqual } from '../utils/utils';
 import PointEditView from '../view/point-edit-view';
 import PoinView from '../view/point-view';
 
@@ -108,8 +109,16 @@ export default class PointPresenter {
     this.#replaceFormToCard();
   };
 
-  #handleFormSubmit = (point) => {
-    this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate =
+      !isDatesEqual(this.#point.dateFrom, update.dateFrom) ||
+      !isDatesEqual(this.#point.dateTo, update.dateTo);
+
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update
+    );
     this.#replaceFormToCard();
   };
 
