@@ -1,11 +1,10 @@
 import { RenderPosition, render } from './framework/render';
 import TripModel from './model/trip-model';
 import BoardPresenter from './presenter/board-presenter';
-import FilterView from './view/filter-view';
 import FilterModel from './model/filter-model';
 import NewPointButtonView from './view/new-point-button-view';
 import TripInfoView from './view/trip-info-view';
-import { FilterType } from './const';
+import FilterPresenter from './presenter/filter-presenter';
 
 const siteHeaderElement = document.querySelector('.trip-main');
 const siteMainElement = document.querySelector('.page-main');
@@ -18,16 +17,16 @@ const boardContainerElement = siteMainElement.querySelector(
 
 const tripModel = new TripModel();
 const filterModel = new FilterModel();
+const filterPresenter = new FilterPresenter({
+  filterContainer: controlsFiltersElement,
+  tripModel,
+  filterModel,
+});
 const boardPresenter = new BoardPresenter({
   boardContainer: boardContainerElement,
   tripModel,
+  filterModel,
 });
-const filters = [
-  {
-    type: FilterType.EVERYTHING,
-    count: 0,
-  },
-];
 
 render(
   new TripInfoView({
@@ -38,14 +37,8 @@ render(
   siteHeaderElement,
   RenderPosition.AFTERBEGIN
 );
-render(
-  new FilterView({
-    filters,
-    currentFilterType: FilterType.EVERYTHING,
-    onFilterTypeChange: () => {},
-  }),
-  controlsFiltersElement
-);
+
 render(new NewPointButtonView(), siteHeaderElement);
 
+filterPresenter.init();
 boardPresenter.init();

@@ -1,27 +1,22 @@
 import AbstractView from '../framework/view/abstract-view';
 
-const createFiltetItemTemplate = ({
-  filter: { type, count },
-  currentFilter,
-}) => `
-  <div class="trip-filters__filter">
-    <input id="filter-${type}"
-      class="trip-filters__filter-input  visually-hidden"
-      type="radio" name="trip-filter"
-      value="${type}"
-      ${type === currentFilter ? 'checked' : ''}
-      ${count === 0 ? 'disabled' : ''}
-    >
-    <label class="trip-filters__filter-label" for="filter-${type}">${type}</label>
-  </div>
-`;
+const createFiltetItemTemplate = ({ filter, currentFilter }) => {
+  const { type, count } = filter;
+
+  return `
+    <div class="trip-filters__filter">
+      <input id="filter-${type}"
+        class="trip-filters__filter-input  visually-hidden"
+        type="radio" name="trip-filter"
+        value="${type}"
+        ${type === currentFilter ? 'checked' : ''}
+        ${count === 0 ? 'disabled' : ''}
+      >
+      <label class="trip-filters__filter-label" for="filter-${type}">${type}</label>
+    </div>`;
+};
 
 const createFilterTemplate = ({ filters, currentFilter }) => {
-  console.log(
-    'createFilterTemplate  filters, currentFilter:',
-    filters,
-    currentFilter
-  );
   const filterItemsTemplate = filters
     .map((filter) => createFiltetItemTemplate({ filter, currentFilter }))
     .join('');

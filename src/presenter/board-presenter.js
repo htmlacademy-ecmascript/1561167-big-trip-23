@@ -11,10 +11,13 @@ import {
   UserAction,
 } from '../const';
 import { compareByDuration, compareByPrice } from '../utils/utils';
+import { filter } from '../utils/filter';
 
 export default class BoardPresenter {
   #boardContainer = null;
+
   #tripModel = null;
+  #filterModel = null;
 
   #boardComponent = new BoardView();
   #pointListComponent = new PointListView();
@@ -26,21 +29,27 @@ export default class BoardPresenter {
 
   #noPointComponent = new NoPointView();
 
-  constructor({ boardContainer, tripModel }) {
+  constructor({ boardContainer, tripModel, filterModel }) {
     this.#boardContainer = boardContainer;
     this.#tripModel = tripModel;
+    this.#filterModel = filterModel;
 
     this.#tripModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
+    const currentFilter = this.#filterModel.filter;
+    const points = this.#tripModel.points;
+    const filteredPoints = filter[currentFilter](points);
+
     switch (this.#currentSortType) {
       case SortingType.TIME:
-        return [...this.#tripModel.points].sort(compareByDuration);
+        return filteredPoints.sort(compareByDuration);
       case SortingType.PRICE:
-        return [...this.#tripModel.points].sort(compareByPrice);
+        return filteredPoints.sort(compareByPrice);
       default:
-        return this.#tripModel.points;
+        return filteredPoints;
     }
   }
 

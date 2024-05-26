@@ -38,6 +38,8 @@ const FilterType = {
   PAST: 'past',
 };
 
+const DEFAULT_FILTER_TYPE = FilterType.EVERYTHING;
+
 const SortingType = {
   DAY: 'day',
   EVENT: 'event',
@@ -98,6 +100,7 @@ export {
   PointType,
   DEFAULT_POINT_TYPE,
   FilterType,
+  DEFAULT_FILTER_TYPE,
   SortingType,
   DEFAULT_SORTING_TYPE,
   BLANK_POINT,
