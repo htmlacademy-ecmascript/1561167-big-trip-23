@@ -5,6 +5,7 @@ import { remove, render } from '../framework/render';
 import NoPointView from '../view/no-point-view';
 import PointPresenter from './point-presenter';
 import {
+  DEFAULT_FILTER_TYPE,
   DEFAULT_SORTING_TYPE,
   SortingType,
   UpdateType,
@@ -26,8 +27,9 @@ export default class BoardPresenter {
 
   #sortComponent = null;
   #currentSortType = DEFAULT_SORTING_TYPE;
+  #filterType = DEFAULT_FILTER_TYPE;
 
-  #noPointComponent = new NoPointView();
+  #noPointComponent = null;
 
   constructor({ boardContainer, tripModel, filterModel }) {
     this.#boardContainer = boardContainer;
@@ -39,9 +41,9 @@ export default class BoardPresenter {
   }
 
   get points() {
-    const currentFilter = this.#filterModel.filter;
     const points = this.#tripModel.points;
-    const filteredPoints = filter[currentFilter](points);
+    this.#filterType = this.#filterModel.filter;
+    const filteredPoints = filter[this.#filterType](points);
 
     switch (this.#currentSortType) {
       case SortingType.TIME:
@@ -94,15 +96,19 @@ export default class BoardPresenter {
     render(this.#sortComponent, this.#boardComponent.element);
   };
 
-  #renderNoPoint = () =>
+  #renderNoPoint = () => {
+    this.#noPointComponent = new NoPointView({ filterType: this.#filterType });
     render(this.#noPointComponent, this.#boardComponent.element);
+  };
 
   #clearBoard = (resetSortType = false) => {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
 
     remove(this.#sortComponent);
-    remove(this.#noPointComponent);
+    if (this.#noPointComponent !== null) {
+      remove(this.#noPointComponent);
+    }
 
     if (resetSortType) {
       this.#currentSortType = SortingType.DEFAULT;

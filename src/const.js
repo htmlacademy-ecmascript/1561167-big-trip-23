@@ -40,6 +40,13 @@ const FilterType = {
 
 const DEFAULT_FILTER_TYPE = FilterType.EVERYTHING;
 
+const NoPointsTextType = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.PAST]: 'There are no past events now',
+};
+
 const SortingType = {
   DAY: 'day',
   EVENT: 'event',
@@ -101,6 +108,7 @@ export {
   DEFAULT_POINT_TYPE,
   FilterType,
   DEFAULT_FILTER_TYPE,
+  NoPointsTextType,
   SortingType,
   DEFAULT_SORTING_TYPE,
   BLANK_POINT,
