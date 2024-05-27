@@ -137,11 +137,21 @@ const createPointDestinationTemplate = ({ state, destinations }) => {
   `;
 };
 
-const createPointEditTemplate = ({ state, destinations, offers }) => {
+const createPointEditTemplate = ({
+  state,
+  destinations,
+  offers,
+  isNewPoint,
+}) => {
   const nameDestination = getNameDestination({
     destinationId: state.destination,
     destinations,
   });
+  const rollupButtonTemplate = `
+    <button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>
+  `;
   const destinationList = destinations.map(({ name }) => name);
   const offersTemplate = createPointOffersTemplate({
     state,
@@ -209,10 +219,10 @@ const createPointEditTemplate = ({ state, destinations, offers }) => {
 						${state.isDisabledSubmit ? 'disabled' : ''}
 						>Save
 					</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
-            <span class="visually-hidden">Open event</span>
+          <button class="event__reset-btn" type="reset">
+            ${isNewPoint ? 'Cancel' : 'Delete'}
           </button>
+          ${!isNewPoint ? rollupButtonTemplate : ''}
         </header>
         ${isShowDetails ? detailsTemplate : ''}
       </form>
@@ -233,10 +243,13 @@ export default class PointEditView extends AbstractStatefulView {
   #dateFromPicker = null;
   #dateToPicker = null;
 
+  #isNewPoint = null;
+
   constructor({
     point = BLANK_POINT,
     destinations,
     offers,
+    isNewPoint = false,
     onFormSubmit,
     onFormCloseClick,
     onFormDeleteClick,
@@ -250,6 +263,7 @@ export default class PointEditView extends AbstractStatefulView {
       })
     );
     this.#offers = offers;
+    this.#isNewPoint = isNewPoint;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormCloseClick = onFormCloseClick;
     this.#handleFormDeleteClick = onFormDeleteClick;
@@ -262,6 +276,7 @@ export default class PointEditView extends AbstractStatefulView {
       state: this._state,
       offers: this.#offers,
       destinations: this.#destinations,
+      isNewPoint: this.#isNewPoint,
     });
   }
 
@@ -276,24 +291,27 @@ export default class PointEditView extends AbstractStatefulView {
   removeElement = () => {
     super.removeElement();
 
-    this.#dateFromPicker.destroy();
-    this.#dateFromPicker = null;
+    if (this.#dateFromPicker !== null) {
+      this.#dateFromPicker.destroy();
+      this.#dateFromPicker = null;
+    }
 
-    this.#dateToPicker.destroy();
-    this.#dateToPicker = null;
+    if (this.#dateToPicker !== null) {
+      this.#dateToPicker.destroy();
+      this.#dateToPicker = null;
+    }
   };
 
   _restoreHandlers = () => {
     const sectionOffersElement = this.element.querySelector(
       '.event__section--offers'
     );
+    const rollupButtonElement =
+      this.element.querySelector('.event__rollup-btn');
 
     this.element
       .querySelector('.event--edit')
       .addEventListener('submit', this.#formSubmitHandler);
-    this.element
-      .querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#formCloseClickHandler);
     this.element
       .querySelector('.event__type-list')
       .addEventListener('change', this.#pointTypeToggleHandler);
@@ -306,6 +324,12 @@ export default class PointEditView extends AbstractStatefulView {
     this.element
       .querySelector('.event__reset-btn')
       .addEventListener('click', this.#formDeleteClickHandler);
+
+    if (rollupButtonElement !== null) {
+      this.element
+        .querySelector('.event__rollup-btn')
+        .addEventListener('click', this.#formCloseClickHandler);
+    }
 
     if (sectionOffersElement !== null) {
       sectionOffersElement.addEventListener(
@@ -441,7 +465,10 @@ export default class PointEditView extends AbstractStatefulView {
       isShowOffers: point.offers.length !== 0,
       isShowDestination: isDestination,
       isDisabledSubmit:
-        point.destination === null || point.destination.length === 0,
+        point.destination === null ||
+        // point.destination.length === 0 ||
+        point.dateFrom === null ||
+        point.dateTo === null,
     };
   };
 

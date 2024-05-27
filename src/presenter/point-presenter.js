@@ -125,7 +125,7 @@ export default class PointPresenter {
   #handleEditClick = () => this.#replaceCardToForm();
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key !== 'Escape') {
+    if (evt.key !== 'Escape' || evt.key === 'Esc') {
       return;
     }
 

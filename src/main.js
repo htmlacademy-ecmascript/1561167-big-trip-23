@@ -26,7 +26,18 @@ const boardPresenter = new BoardPresenter({
   boardContainer: boardContainerElement,
   tripModel,
   filterModel,
+  onNewPointDestroy: handleNewPointFormClose,
 });
+const newPointButtonComponent = new NewPointButtonView({
+  onNewPointClick: handleNewPointButtonClick,
+});
+function handleNewPointFormClose() {
+  newPointButtonComponent.element.disabled = false;
+}
+function handleNewPointButtonClick() {
+  boardPresenter.createPoint();
+  newPointButtonComponent.element.disabled = true;
+}
 
 render(
   new TripInfoView({
@@ -38,7 +49,7 @@ render(
   RenderPosition.AFTERBEGIN
 );
 
-render(new NewPointButtonView(), siteHeaderElement);
+render(newPointButtonComponent, siteHeaderElement);
 
 filterPresenter.init();
 boardPresenter.init();

@@ -64,7 +64,6 @@ const ALLOWED_SORTING_TYPES = [
 const DEFAULT_SORTING_TYPE = SortingType.DAY;
 
 const BLANK_POINT = {
-  id: null,
   basePrice: 0,
   dateFrom: null,
   dateTo: null,

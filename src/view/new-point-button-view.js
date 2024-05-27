@@ -7,7 +7,22 @@ const createNewPointButtonTemplate = () => `
 `;
 
 export default class NewPointButtonView extends AbstractView {
+  #handleNewPointClick = null;
+
+  constructor({ onNewPointClick }) {
+    super();
+    this.#handleNewPointClick = onNewPointClick;
+
+    this.element.addEventListener('click', this.#newPointClickHandler);
+  }
+
   get template() {
     return createNewPointButtonTemplate();
   }
+
+  #newPointClickHandler = (evt) => {
+    evt.preventDefault();
+
+    this.#handleNewPointClick();
+  };
 }

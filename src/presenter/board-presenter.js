@@ -13,6 +13,7 @@ import {
 } from '../const';
 import { compareByDuration, compareByPrice } from '../utils/utils';
 import { filter } from '../utils/filter';
+import NewPointPresenter from './new-point-presenter';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -24,6 +25,7 @@ export default class BoardPresenter {
   #pointListComponent = new PointListView();
 
   #pointPresenters = new Map();
+  #newPointPresenter = null;
 
   #sortComponent = null;
   #currentSortType = DEFAULT_SORTING_TYPE;
@@ -31,10 +33,18 @@ export default class BoardPresenter {
 
   #noPointComponent = null;
 
-  constructor({ boardContainer, tripModel, filterModel }) {
+  constructor({ boardContainer, tripModel, filterModel, onNewPointDestroy }) {
     this.#boardContainer = boardContainer;
     this.#tripModel = tripModel;
     this.#filterModel = filterModel;
+
+    this.#newPointPresenter = new NewPointPresenter({
+      pointListContainer: this.#pointListComponent.element,
+      destinations: this.#tripModel.destinations,
+      offers: this.#tripModel.offers,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewPointDestroy,
+    });
 
     this.#tripModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -57,6 +67,12 @@ export default class BoardPresenter {
 
   init = () => {
     this.#renderBoard();
+  };
+
+  createPoint = () => {
+    this.#currentSortType = DEFAULT_SORTING_TYPE;
+    this.#filterModel.setFilter(UpdateType.MAJOR, DEFAULT_FILTER_TYPE);
+    this.#newPointPresenter.init();
   };
 
   #renderBoard = () => {
@@ -155,6 +171,8 @@ export default class BoardPresenter {
     this.#renderBoard();
   };
 
-  #handleModeChange = () =>
+  #handleModeChange = () => {
+    this.#newPointPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
 }
