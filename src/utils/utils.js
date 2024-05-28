@@ -7,6 +7,7 @@ import {
   DATE_EVENT_TEMPLATE,
   INVERTED_SHORT_DATE_TEMPLATE,
   LONG_EVENT_DURATION_TEMPLATE,
+  MONTH_TEMPLATE,
   MSEC_IN_DAY,
   MSEC_IN_HOUR,
   SHORT_EVENT_DURATION_TEMPLATE,
@@ -42,6 +43,9 @@ const humanizeDurationEvent = ({ dateFrom, dateTo }) => {
 
   return dayjs.duration(diffTimeshtamp).format(SHORT_EVENT_DURATION_TEMPLATE);
 };
+
+const isDatesOneMonth = (dateA, dateB) =>
+  dayjs(dateA).format(MONTH_TEMPLATE) === dayjs(dateB).format(MONTH_TEMPLATE);
 
 const isDatesEqual = (dateA, dateB) =>
   (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB);
@@ -114,6 +118,7 @@ export {
   humanizeDateCalendarFormat,
   humanizeDateFormat,
   humanizeDurationEvent,
+  isDatesOneMonth,
   isDatesEqual,
   getNameDestination,
   getOffersByType,
