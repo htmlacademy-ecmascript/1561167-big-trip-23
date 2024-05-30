@@ -89,6 +89,12 @@ const UpdateType = {
   PATCH: 'patch',
   MINOR: 'minor',
   MAJOR: 'major',
+  INIT: 'init',
+};
+
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
 };
 
 export {
@@ -117,4 +123,5 @@ export {
   ALLOWED_SORTING_TYPES,
   UserAction,
   UpdateType,
+  Method,
 };
