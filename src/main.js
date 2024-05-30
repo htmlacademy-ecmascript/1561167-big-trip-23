@@ -36,11 +36,11 @@ const newPointButtonComponent = new NewPointButtonView({
   onNewPointClick: handleNewPointButtonClick,
 });
 function handleNewPointFormClose() {
-  newPointButtonComponent.element.disabled = false;
+  newPointButtonComponent.element.toggleAttribute('disabled', false);
 }
 function handleNewPointButtonClick() {
   boardPresenter.createPoint();
-  newPointButtonComponent.element.disabled = true;
+  newPointButtonComponent.element.toggleAttribute('disabled', true);
 }
 
 render(newPointButtonComponent, siteHeaderElement);
