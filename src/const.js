@@ -7,8 +7,9 @@ const MSEC_IN_HOUR = MIN_IN_HOUR * SEC_IN_MIN * MSEC_IN_SEC;
 const MSEC_IN_DAY = HOUR_IN_DAY * MSEC_IN_HOUR;
 
 const DAY_MONTH_TEMPLATE = 'DD';
-const SHORT_DATE_TEMPLATE = 'DD MMM';
-const INVERTED_SHORT_DATE_TEMPLATE = 'MMM DD';
+const MONTH_TEMPLATE = 'MMM';
+const SHORT_DATE_TEMPLATE = `${DAY_MONTH_TEMPLATE} ${MONTH_TEMPLATE}`;
+const INVERTED_SHORT_DATE_TEMPLATE = `${MONTH_TEMPLATE} ${DAY_MONTH_TEMPLATE}`;
 const TIME_TEMPLATE = 'HH:mm';
 const LONG_EVENT_DURATION_TEMPLATE = 'DD[D] HH[H] mm[M]';
 const AVERAGE_EVENT_DURATION_TEMPLATE = 'HH[H] mm[M]';
@@ -38,6 +39,15 @@ const FilterType = {
   PAST: 'past',
 };
 
+const DEFAULT_FILTER_TYPE = FilterType.EVERYTHING;
+
+const NoPointsTextType = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.PAST]: 'There are no past events now',
+};
+
 const SortingType = {
   DAY: 'day',
   EVENT: 'event',
@@ -55,7 +65,6 @@ const ALLOWED_SORTING_TYPES = [
 const DEFAULT_SORTING_TYPE = SortingType.DAY;
 
 const BLANK_POINT = {
-  id: null,
   basePrice: 0,
   dateFrom: null,
   dateTo: null,
@@ -70,6 +79,18 @@ const ModeCard = {
   EDITING: 'editing',
 };
 
+const UserAction = {
+  UPDATE_POINT: 'update_point',
+  ADD_POINT: 'add_point',
+  DELETE_POINT: 'delete_point',
+};
+
+const UpdateType = {
+  PATCH: 'patch',
+  MINOR: 'minor',
+  MAJOR: 'major',
+};
+
 export {
   MSEC_IN_DAY,
   MSEC_IN_HOUR,
@@ -80,15 +101,20 @@ export {
   TIME_TEMPLATE,
   DATE_EVENT_TEMPLATE,
   DAY_MONTH_TEMPLATE,
+  MONTH_TEMPLATE,
   SHORT_DATE_TEMPLATE,
   MACHINE_DATE_TEMPLATE,
   FULL_MACHINE_DATE_TEMPLATE,
   PointType,
   DEFAULT_POINT_TYPE,
   FilterType,
+  DEFAULT_FILTER_TYPE,
+  NoPointsTextType,
   SortingType,
   DEFAULT_SORTING_TYPE,
   BLANK_POINT,
   ModeCard,
   ALLOWED_SORTING_TYPES,
+  UserAction,
+  UpdateType,
 };

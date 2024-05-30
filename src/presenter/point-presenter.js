@@ -1,5 +1,6 @@
-import { ModeCard } from '../const';
+import { ModeCard, UpdateType, UserAction } from '../const';
 import { remove, render, replace } from '../framework/render';
+import { isDatesEqual } from '../utils/utils';
 import PointEditView from '../view/point-edit-view';
 import PoinView from '../view/point-view';
 
@@ -52,6 +53,7 @@ export default class PointPresenter {
       offers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
       onFormCloseClick: this.#handleFormCloseClick,
+      onFormDeleteClick: this.#handleDeleteClick,
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -97,7 +99,7 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () =>
-    this.#handleDataChange({
+    this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, {
       ...this.#point,
       isFavorite: !this.#point.isFavorite,
     });
@@ -107,15 +109,23 @@ export default class PointPresenter {
     this.#replaceFormToCard();
   };
 
-  #handleFormSubmit = (point) => {
-    this.#handleDataChange(point);
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate =
+      !isDatesEqual(this.#point.dateFrom, update.dateFrom) ||
+      !isDatesEqual(this.#point.dateTo, update.dateTo);
+
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update
+    );
     this.#replaceFormToCard();
   };
 
   #handleEditClick = () => this.#replaceCardToForm();
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key !== 'Escape') {
+    if (evt.key !== 'Escape' || evt.key === 'Esc') {
       return;
     }
 
@@ -123,4 +133,7 @@ export default class PointPresenter {
     this.#pointEditComponent.reset(this.#point);
     this.#replaceFormToCard();
   };
+
+  #handleDeleteClick = (point) =>
+    this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, point);
 }

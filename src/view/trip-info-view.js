@@ -4,18 +4,16 @@ import {
   getNameDestination,
   getSelectedOffers,
   humanizeDateFormat,
+  isDatesOneMonth,
 } from '../utils/utils';
 
 const createTitleInfoTemplate = ({ points, destinations }) => {
-  const uniqueTitlePoints = new Set(
-    points.map((point) =>
-      getNameDestination({
-        destinationId: point.destination,
-        destinations,
-      })
-    )
+  const titles = points.map((point) =>
+    getNameDestination({
+      destinationId: point.destination,
+      destinations,
+    })
   );
-  const titles = [...uniqueTitlePoints];
 
   switch (titles.length) {
     case 1:
@@ -29,18 +27,18 @@ const createTitleInfoTemplate = ({ points, destinations }) => {
 };
 
 const createDatesInfoTemplate = (points) => {
+  const dateFrom = points[0].dateFrom;
+  const dateTo = points[points.length - 1].dateTo;
+
   if (points.length === 1) {
-    return humanizeDateFormat(points[0].dateFrom, SHORT_DATE_TEMPLATE);
+    return humanizeDateFormat(dateFrom, SHORT_DATE_TEMPLATE);
   }
 
-  const startingDate = humanizeDateFormat(
-    points[0].dateFrom,
-    DAY_MONTH_TEMPLATE
-  );
-  const endingDate = humanizeDateFormat(
-    points[points.length - 1].dateTo,
-    SHORT_DATE_TEMPLATE
-  );
+  const startingDateTemplate = isDatesOneMonth(dateFrom, dateTo)
+    ? DAY_MONTH_TEMPLATE
+    : SHORT_DATE_TEMPLATE;
+  const startingDate = humanizeDateFormat(dateFrom, startingDateTemplate);
+  const endingDate = humanizeDateFormat(dateTo, SHORT_DATE_TEMPLATE);
 
   return `${startingDate}&nbsp;—&nbsp;${endingDate}`;
 };
