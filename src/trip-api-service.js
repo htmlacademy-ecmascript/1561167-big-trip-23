@@ -1,28 +1,28 @@
-import { Method } from './const';
+import { Method, UrlHandle } from './const';
 import ApiService from './framework/api-service';
 
 export default class TripApiService extends ApiService {
   get points() {
-    return this._load({ url: 'big-trip/points' }).then(
+    return this._load({ url: UrlHandle.READ_POINTS }).then(
       ApiService.parseResponse
     );
   }
 
   get destinations() {
-    return this._load({ url: 'big-trip/destinations' }).then(
+    return this._load({ url: UrlHandle.READ_DESTINATIONS }).then(
       ApiService.parseResponse
     );
   }
 
   get offers() {
-    return this._load({ url: 'big-trip/offers' }).then(
+    return this._load({ url: UrlHandle.READ_OFFERS }).then(
       ApiService.parseResponse
     );
   }
 
   updatedPoint = async (point) => {
     const response = await this._load({
-      url: `big-trip/points/${point.id}`,
+      url: `${UrlHandle.UPDATE}/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(this.#adaptToServer(point)),
       headers: new Headers({ 'Content-Type': 'application/json' }),

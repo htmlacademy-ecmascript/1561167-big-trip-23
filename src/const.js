@@ -97,6 +97,15 @@ const Method = {
   PUT: 'PUT',
 };
 
+const UrlHandle = {
+  READ_POINTS: 'big-trip/points',
+  READ_DESTINATIONS: 'big-trip/destinations',
+  READ_OFFERS: 'big-trip/offers',
+  CREATE: 'big-trip/points',
+  UPDATE: 'big-trip/points',
+  DELETE: 'big-trip/points',
+};
+
 export {
   MSEC_IN_DAY,
   MSEC_IN_HOUR,
@@ -124,4 +133,5 @@ export {
   UserAction,
   UpdateType,
   Method,
+  UrlHandle,
 };
