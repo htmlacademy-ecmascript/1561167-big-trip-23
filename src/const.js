@@ -89,6 +89,21 @@ const UpdateType = {
   PATCH: 'patch',
   MINOR: 'minor',
   MAJOR: 'major',
+  INIT: 'init',
+};
+
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+};
+
+const UrlHandle = {
+  READ_POINTS: 'big-trip/points',
+  READ_DESTINATIONS: 'big-trip/destinations',
+  READ_OFFERS: 'big-trip/offers',
+  CREATE: 'big-trip/points',
+  UPDATE: 'big-trip/points',
+  DELETE: 'big-trip/points',
 };
 
 export {
@@ -117,4 +132,6 @@ export {
   ALLOWED_SORTING_TYPES,
   UserAction,
   UpdateType,
+  Method,
+  UrlHandle,
 };

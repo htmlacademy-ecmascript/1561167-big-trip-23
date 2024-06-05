@@ -8,6 +8,10 @@ import {
 } from '../utils/utils';
 
 const createTitleInfoTemplate = ({ points, destinations }) => {
+  if (points.length === 0) {
+    return '';
+  }
+
   const titles = points.map((point) =>
     getNameDestination({
       destinationId: point.destination,
@@ -27,6 +31,10 @@ const createTitleInfoTemplate = ({ points, destinations }) => {
 };
 
 const createDatesInfoTemplate = (points) => {
+  if (points.length === 0) {
+    return '';
+  }
+
   const dateFrom = points[0].dateFrom;
   const dateTo = points[points.length - 1].dateTo;
 
@@ -57,10 +65,6 @@ const createTotalInfoTemplate = ({ points, offers }) => {
 };
 
 const createTripInfoTemplate = ({ points, offers, destinations }) => {
-  if (points.length === 0) {
-    return '';
-  }
-
   const titleInfoTemplate = createTitleInfoTemplate({ points, destinations });
   const datesInfoTemplate = createDatesInfoTemplate(points);
   const totalInfoTemplate = createTotalInfoTemplate({ points, offers });

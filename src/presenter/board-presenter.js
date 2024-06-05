@@ -14,6 +14,7 @@ import {
 import { compareByDuration, compareByPrice } from '../utils/utils';
 import { filter } from '../utils/filter';
 import NewPointPresenter from './new-point-presenter';
+import LoadingView from '../view/loading-view';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -23,6 +24,8 @@ export default class BoardPresenter {
 
   #boardComponent = new BoardView();
   #pointListComponent = new PointListView();
+  #loadingComponent = new LoadingView();
+  #noPointComponent = null;
 
   #pointPresenters = new Map();
   #newPointPresenter = null;
@@ -31,7 +34,7 @@ export default class BoardPresenter {
   #currentSortType = DEFAULT_SORTING_TYPE;
   #filterType = DEFAULT_FILTER_TYPE;
 
-  #noPointComponent = null;
+  #isLoading = true;
 
   constructor({ boardContainer, tripModel, filterModel, onNewPointDestroy }) {
     this.#boardContainer = boardContainer;
@@ -78,6 +81,11 @@ export default class BoardPresenter {
   #renderBoard = () => {
     render(this.#boardComponent, this.#boardContainer);
 
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     if (this.points.length === 0) {
       this.#renderNoPoint();
       return;
@@ -117,11 +125,15 @@ export default class BoardPresenter {
     render(this.#noPointComponent, this.#boardComponent.element);
   };
 
+  #renderLoading = () =>
+    render(this.#loadingComponent, this.#boardComponent.element);
+
   #clearBoard = (resetSortType = false) => {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
     if (this.#noPointComponent !== null) {
       remove(this.#noPointComponent);
     }
@@ -156,6 +168,11 @@ export default class BoardPresenter {
         break;
       case UpdateType.MAJOR:
         this.#clearBoard(true);
+        this.#renderBoard();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderBoard();
         break;
     }
