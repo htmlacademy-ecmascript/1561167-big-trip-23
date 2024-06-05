@@ -6,6 +6,7 @@ import NewPointButtonView from './view/new-point-button-view';
 import FilterPresenter from './presenter/filter-presenter';
 import TripInfoPresenter from './presenter/trip-info-presenter';
 import TripApiService from './trip-api-service';
+import { AUTHORIZATION, END_POINT } from './const';
 
 const siteHeaderElement = document.querySelector('.trip-main');
 const siteMainElement = document.querySelector('.page-main');
@@ -15,9 +16,6 @@ const controlsFiltersElement = siteHeaderElement.querySelector(
 const boardContainerElement = siteMainElement.querySelector(
   '.page-body__container'
 );
-
-const AUTHORIZATION = 'Basic kSqr5QCpbjwAq4WRRy';
-const END_POINT = 'https://23.objects.htmlacademy.pro';
 
 const tripModel = new TripModel({
   tripApiService: new TripApiService(END_POINT, AUTHORIZATION),
@@ -49,9 +47,14 @@ function handleNewPointButtonClick() {
   newPointButtonComponent.element.toggleAttribute('disabled', true);
 }
 
-tripInfoPresenter.init();
+newPointButtonComponent.element.toggleAttribute('disabled', true);
+render(newPointButtonComponent, siteHeaderElement);
+
 filterPresenter.init();
 boardPresenter.init();
-tripModel
-  .init()
-  .finally(() => render(newPointButtonComponent, siteHeaderElement));
+tripModel.init().finally(() => {
+  if (!tripModel.isServerUnavailable) {
+    newPointButtonComponent.element.toggleAttribute('disabled', false);
+    tripInfoPresenter.init();
+  }
+});
