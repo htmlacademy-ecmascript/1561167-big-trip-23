@@ -66,8 +66,8 @@ const DEFAULT_SORTING_TYPE = SortingType.DAY;
 
 const BLANK_POINT = {
   basePrice: 0,
-  dateFrom: null,
-  dateTo: null,
+  dateFrom: new Date(),
+  dateTo: new Date(),
   destination: null,
   isFavorite: false,
   offers: [],
@@ -92,9 +92,14 @@ const UpdateType = {
   INIT: 'init',
 };
 
+const AUTHORIZATION = 'Basic kSqr5QCpbjwAq4WRRy';
+const END_POINT = 'https://23.objects.htmlacademy.pro';
+
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 const UrlHandle = {
@@ -105,6 +110,14 @@ const UrlHandle = {
   UPDATE: 'big-trip/points',
   DELETE: 'big-trip/points',
 };
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+const TEXT_SHOW_LOADING = 'Loading...';
+const TEXT_SHOW_FAILED_LOAD = 'Failed to load latest route information';
 
 export {
   MSEC_IN_DAY,
@@ -132,6 +145,11 @@ export {
   ALLOWED_SORTING_TYPES,
   UserAction,
   UpdateType,
+  AUTHORIZATION,
+  END_POINT,
   Method,
   UrlHandle,
+  TEXT_SHOW_LOADING,
+  TEXT_SHOW_FAILED_LOAD,
+  TimeLimit,
 };

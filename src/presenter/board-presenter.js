@@ -8,6 +8,7 @@ import {
   DEFAULT_FILTER_TYPE,
   DEFAULT_SORTING_TYPE,
   SortingType,
+  TimeLimit,
   UpdateType,
   UserAction,
 } from '../const';
@@ -15,6 +16,8 @@ import { compareByDuration, compareByPrice } from '../utils/utils';
 import { filter } from '../utils/filter';
 import NewPointPresenter from './new-point-presenter';
 import LoadingView from '../view/loading-view';
+import UiBlocker from '../framework/ui-blocker/ui-blocker';
+import NoLoadView from '../view/no-load-view';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -25,6 +28,7 @@ export default class BoardPresenter {
   #boardComponent = new BoardView();
   #pointListComponent = new PointListView();
   #loadingComponent = new LoadingView();
+  #noLoadComponent = new NoLoadView();
   #noPointComponent = null;
 
   #pointPresenters = new Map();
@@ -34,20 +38,20 @@ export default class BoardPresenter {
   #currentSortType = DEFAULT_SORTING_TYPE;
   #filterType = DEFAULT_FILTER_TYPE;
 
+  #onNewPointDestroy = null;
+
   #isLoading = true;
+
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT,
+  });
 
   constructor({ boardContainer, tripModel, filterModel, onNewPointDestroy }) {
     this.#boardContainer = boardContainer;
     this.#tripModel = tripModel;
     this.#filterModel = filterModel;
-
-    this.#newPointPresenter = new NewPointPresenter({
-      pointListContainer: this.#pointListComponent.element,
-      destinations: this.#tripModel.destinations,
-      offers: this.#tripModel.offers,
-      onDataChange: this.#handleViewAction,
-      onDestroy: onNewPointDestroy,
-    });
+    this.#onNewPointDestroy = onNewPointDestroy;
 
     this.#tripModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -68,6 +72,14 @@ export default class BoardPresenter {
     }
   }
 
+  get destinations() {
+    return this.#tripModel.destinations;
+  }
+
+  get offers() {
+    return this.#tripModel.offers;
+  }
+
   init = () => {
     this.#renderBoard();
   };
@@ -86,7 +98,7 @@ export default class BoardPresenter {
       return;
     }
 
-    if (this.points.length === 0) {
+    if (this.#tripModel.isServerUnavailable) {
       this.#renderNoPoint();
       return;
     }
@@ -102,8 +114,8 @@ export default class BoardPresenter {
   #renderPoint = (point) => {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#pointListComponent.element,
-      offers: this.#tripModel.offers,
-      destinations: this.#tripModel.destinations,
+      offers: this.offers,
+      destinations: this.destinations,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
     });
@@ -128,6 +140,9 @@ export default class BoardPresenter {
   #renderLoading = () =>
     render(this.#loadingComponent, this.#boardComponent.element);
 
+  #renderNoLoad = () =>
+    render(this.#noLoadComponent, this.#boardComponent.element);
+
   #clearBoard = (resetSortType = false) => {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
@@ -143,18 +158,35 @@ export default class BoardPresenter {
     }
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#tripModel.updatePoint(updateType, update);
+        this.#pointPresenters.get(update.id).setSaving();
+        try {
+          await this.#tripModel.updatePoint(updateType, update);
+        } catch (error) {
+          this.#pointPresenters.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
-        this.#tripModel.addPoint(updateType, update);
+        this.#newPointPresenter.setSaving();
+        try {
+          await this.#tripModel.addPoint(updateType, update);
+        } catch (error) {
+          this.#newPointPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
-        this.#tripModel.deletePoint(updateType, update);
+        this.#pointPresenters.get(update.id).setDeleting();
+        try {
+          await this.#tripModel.deletePoint(updateType, update);
+        } catch (error) {
+          this.#pointPresenters.get(update.id).setAborting();
+        }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
@@ -173,6 +205,19 @@ export default class BoardPresenter {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
+
+        if (this.#tripModel.isServerUnavailable) {
+          this.#renderNoLoad();
+          return;
+        }
+
+        this.#newPointPresenter = new NewPointPresenter({
+          pointListContainer: this.#pointListComponent.element,
+          destinations: this.destinations,
+          offers: this.offers,
+          onDataChange: this.#handleViewAction,
+          onDestroy: this.#onNewPointDestroy,
+        });
         this.#renderBoard();
         break;
     }
