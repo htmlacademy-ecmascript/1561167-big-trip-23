@@ -92,7 +92,7 @@ const UpdateType = {
   INIT: 'init',
 };
 
-const AUTHORIZATION = 'Basic kSqr5QCpbjwAq4WRRy';
+const AUTHORIZATION = 'Basic kCpbjwAq4WRRySqr5Q';
 const END_POINT = 'https://23.objects.htmlacademy.pro';
 
 const Method = {

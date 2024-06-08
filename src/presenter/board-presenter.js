@@ -12,7 +12,11 @@ import {
   UpdateType,
   UserAction,
 } from '../const';
-import { compareByDuration, compareByPrice } from '../utils/utils';
+import {
+  compareByDate,
+  compareByDuration,
+  compareByPrice,
+} from '../utils/utils';
 import { filter } from '../utils/filter';
 import NewPointPresenter from './new-point-presenter';
 import LoadingView from '../view/loading-view';
@@ -68,7 +72,7 @@ export default class BoardPresenter {
       case SortingType.PRICE:
         return filteredPoints.sort(compareByPrice);
       default:
-        return filteredPoints;
+        return filteredPoints.sort(compareByDate);
     }
   }
 

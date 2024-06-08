@@ -52,6 +52,7 @@ render(newPointButtonComponent, siteHeaderElement);
 
 filterPresenter.init();
 boardPresenter.init();
+
 tripModel.init().finally(() => {
   if (!tripModel.isServerUnavailable) {
     newPointButtonComponent.element.toggleAttribute('disabled', false);

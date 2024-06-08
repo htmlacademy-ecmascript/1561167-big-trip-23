@@ -114,6 +114,8 @@ const isAllowedSortingType = (sortingType) =>
 
 const compareByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 
+const compareByDate = (pointA, pointB) => pointA.dateFrom - pointB.dateFrom;
+
 export {
   humanizeDateCalendarFormat,
   humanizeDateFormat,
@@ -129,6 +131,7 @@ export {
   isPointPast,
   compareByPrice,
   compareByDuration,
+  compareByDate,
   hasDetailsDestination,
   getDestinationIdByName,
   hasNameInDestinations,
