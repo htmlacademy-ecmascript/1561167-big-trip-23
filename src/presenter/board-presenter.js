@@ -102,7 +102,7 @@ export default class BoardPresenter {
       return;
     }
 
-    if (this.#tripModel.isServerUnavailable) {
+    if (this.#tripModel.isServerUnavailable || this.points.length === 0) {
       this.#renderNoPoint();
       return;
     }

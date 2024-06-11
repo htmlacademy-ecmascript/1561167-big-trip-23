@@ -40,7 +40,6 @@ export default class NewPointPresenter {
       onFormSubmit: this.#handleFormSubmit,
       onFormDeleteClick: this.#handleDeleteClick,
     });
-
     render(
       this.#pointEditComponent,
       this.#pointListContainer,

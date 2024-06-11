@@ -50,12 +50,12 @@ function handleNewPointButtonClick() {
 newPointButtonComponent.element.toggleAttribute('disabled', true);
 render(newPointButtonComponent, siteHeaderElement);
 
+tripInfoPresenter.init();
 filterPresenter.init();
 boardPresenter.init();
 
 tripModel.init().finally(() => {
   if (!tripModel.isServerUnavailable) {
     newPointButtonComponent.element.toggleAttribute('disabled', false);
-    tripInfoPresenter.init();
   }
 });
