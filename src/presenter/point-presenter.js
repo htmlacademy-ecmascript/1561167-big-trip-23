@@ -155,7 +155,6 @@ export default class PointPresenter {
       isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update
     );
-    // this.#replaceFormToCard();
   };
 
   #handleEditClick = () => this.#replaceCardToForm();

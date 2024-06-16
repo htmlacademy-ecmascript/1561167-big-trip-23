@@ -8,6 +8,7 @@ import {
   hasDetailsDestination,
   humanizeDateCalendarFormat,
   getDestinationIdByName,
+  hasOffersByType,
 } from '../utils/utils';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -67,9 +68,12 @@ const createOfferSelectorTemplate = ({
 
   return `
     <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="${id}" type="checkbox" name="event-offer-${lastOfferWord}"
-      ${isChecked ? 'checked' : ''}
-      ${point.isDisabled ? 'disabled' : ''}>
+      <input class="event__offer-checkbox  visually-hidden"
+        id="${id}"
+        type="checkbox"
+        name="event-offer-${lastOfferWord}"
+        ${isChecked ? 'checked' : ''}
+        ${point.isDisabled ? 'disabled' : ''}>
       <label class="event__offer-label" for="${id}">
         <span class="event__offer-title">${title}</span>
         +€&nbsp;
@@ -84,7 +88,7 @@ const createPointOffersTemplate = ({ state, offers }) => {
     return '';
   }
 
-  const offersByType = getOffersByType({ point: state, offers });
+  const offersByType = getOffersByType({ type: state.type, offers });
   const offerSelectorTemplate = offersByType
     .map((offer) => createOfferSelectorTemplate({ point: state, offer }))
     .join('');
@@ -126,13 +130,12 @@ const createPointDestinationTemplate = ({ state, destinations }) => {
     return '';
   }
 
-  const selectedDestination = getSelectedDestination({
-    point: state,
-    destinations,
-  });
-  const description = selectedDestination?.description ?? '';
-  const destinationPhotos = selectedDestination?.pictures ?? [];
-  const destinationPicture = createDestinationPhotoTemplate(destinationPhotos);
+  const { description = '', pictures = [] } =
+    getSelectedDestination({
+      destinationId: state.destination,
+      destinations,
+    }) ?? {};
+  const destinationPicture = createDestinationPhotoTemplate(pictures);
 
   return `
     <section class="event__section  event__section--destination">
@@ -421,7 +424,14 @@ export default class PointEditView extends AbstractStatefulView {
     }
 
     evt.preventDefault();
-    this.updateElement({ type: evt.target.value, isShowOffers: true });
+
+    const type = evt.target.value;
+    const isShowOffers = hasOffersByType({
+      offers: this.#offers,
+      type,
+    });
+
+    this.updateElement({ type, isShowOffers });
   };
 
   #destinationToggleHandler = (evt) => {
@@ -436,10 +446,14 @@ export default class PointEditView extends AbstractStatefulView {
       name,
       destinations: this.#destinations,
     });
+    const isShowDestination = hasDetailsDestination({
+      destinationId,
+      destinations: this.#destinations,
+    });
 
     this.updateElement({
       destination: destinationId,
-      isShowDestination: isNameInDestination,
+      isShowDestination,
       isDisabledSubmit: !isNameInDestination,
     });
   };
@@ -478,12 +492,12 @@ export default class PointEditView extends AbstractStatefulView {
     const isDestination =
       point.destination !== null &&
       hasDetailsDestination({
-        point,
+        destinationId: point.destination,
         destinations,
       });
     return {
       ...point,
-      isShowOffers: offers.length !== 0,
+      isShowOffers: hasOffersByType({ type: point.type, offers }),
       isShowDestination: isDestination,
       isDisabledSubmit:
         point.destination === null ||

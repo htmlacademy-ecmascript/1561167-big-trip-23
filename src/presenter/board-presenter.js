@@ -89,12 +89,13 @@ export default class BoardPresenter {
   };
 
   createPoint = () => {
+    render(this.#pointListComponent, this.#boardComponent.element);
     this.#currentSortType = DEFAULT_SORTING_TYPE;
     this.#filterModel.setFilter(UpdateType.MAJOR, DEFAULT_FILTER_TYPE);
     this.#newPointPresenter.init();
   };
 
-  #renderBoard = () => {
+  #renderBoard = (isCreate = false) => {
     render(this.#boardComponent, this.#boardContainer);
 
     if (this.#isLoading) {
@@ -102,7 +103,10 @@ export default class BoardPresenter {
       return;
     }
 
-    if (this.#tripModel.isServerUnavailable || this.points.length === 0) {
+    if (
+      this.#tripModel.isServerUnavailable ||
+      (this.points.length === 0 && !isCreate)
+    ) {
       this.#renderNoPoint();
       return;
     }
@@ -204,7 +208,7 @@ export default class BoardPresenter {
         break;
       case UpdateType.MAJOR:
         this.#clearBoard(true);
-        this.#renderBoard();
+        this.#renderBoard(true);
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
