@@ -50,8 +50,8 @@ const isDatesOneMonth = (dateA, dateB) =>
 const isDatesEqual = (dateA, dateB) =>
   (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB);
 
-const getSelectedDestination = ({ point, destinations }) =>
-  destinations.find(({ id }) => id === point.destination);
+const getSelectedDestination = ({ destinationId, destinations }) =>
+  destinations.find(({ id }) => id === destinationId);
 
 const getNameDestination = ({ destinationId, destinations }) =>
   destinations.find((item) => destinationId === item.id)?.name ?? '';
@@ -62,11 +62,14 @@ const getDestinationIdByName = ({ name, destinations }) =>
       nameDectination.toLowerCase() === name.toLowerCase()
   )?.id ?? '';
 
-const getOffersByType = ({ point, offers }) =>
-  offers.find(({ type }) => point.type === type)?.offers ?? [];
+const getOffersByType = ({ type, offers }) =>
+  offers.find(({ type: currentType }) => currentType === type)?.offers ?? [];
+
+const hasOffersByType = ({ type, offers }) =>
+  getOffersByType({ type, offers }).length !== 0;
 
 const getSelectedOffers = ({ point, offers }) => {
-  const offersByType = getOffersByType({ offers, point });
+  const offersByType = getOffersByType({ type: point.type, offers });
 
   if (offersByType.length === 0) {
     return [];
@@ -75,12 +78,13 @@ const getSelectedOffers = ({ point, offers }) => {
   return offersByType.filter(({ id }) => point.offers.includes(id));
 };
 
-const hasDetailsDestination = ({ point, destinations }) => {
+const hasDetailsDestination = ({ destinationId, destinations }) => {
   const { description = '', pictures = [] } =
     getSelectedDestination({
-      point,
+      destinationId,
       destinations,
     }) ?? {};
+
   return description.length !== 0 || pictures.length !== 0;
 };
 
@@ -114,6 +118,15 @@ const isAllowedSortingType = (sortingType) =>
 
 const compareByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 
+const compareByDate = ({ dateFrom: datePointA }, { dateFrom: datePointB }) => {
+  if (dayjs(datePointA).isBefore(datePointB)) {
+    return -1;
+  } else if (dayjs(datePointA).isAfter(datePointB)) {
+    return 1;
+  }
+  return 0;
+};
+
 export {
   humanizeDateCalendarFormat,
   humanizeDateFormat,
@@ -122,6 +135,7 @@ export {
   isDatesEqual,
   getNameDestination,
   getOffersByType,
+  hasOffersByType,
   getSelectedOffers,
   getSelectedDestination,
   isPointFuture,
@@ -129,6 +143,7 @@ export {
   isPointPast,
   compareByPrice,
   compareByDuration,
+  compareByDate,
   hasDetailsDestination,
   getDestinationIdByName,
   hasNameInDestinations,
